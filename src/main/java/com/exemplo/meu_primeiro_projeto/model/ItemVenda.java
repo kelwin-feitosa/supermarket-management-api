@@ -31,7 +31,7 @@ public class ItemVenda {
         this.produto = produto;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
-        this.subtotal = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+        atualizarSubtotal();
     }
 
     private void atualizarSubtotal() {
