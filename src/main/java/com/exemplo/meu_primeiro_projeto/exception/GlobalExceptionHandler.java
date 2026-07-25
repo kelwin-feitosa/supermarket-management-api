@@ -14,182 +14,113 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProdutoNaoEncontradoException.class)
     public ResponseEntity<RespostaErro> tratarProdutoNaoEncontrado(ProdutoNaoEncontradoException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Produto não encontrado.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-        
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        return resposta(HttpStatus.NOT_FOUND, "Produto não encontrado.", ex.getMessage());
     }
 
     @ExceptionHandler(CategoriaNaoEncontradaException.class)
     public ResponseEntity<RespostaErro> tratarCategoriaNaoEncontrada(CategoriaNaoEncontradaException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Categoria não encontrada.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        return resposta(HttpStatus.NOT_FOUND, "Categoria não encontrada.", ex.getMessage());
     }
 
     @ExceptionHandler(ClienteNaoEncontradoException.class)
     public ResponseEntity<RespostaErro> tratarClienteNaoEncontrado(ClienteNaoEncontradoException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Cliente não encontrado.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        return resposta(HttpStatus.NOT_FOUND, "Cliente não encontrado.", ex.getMessage());
     }
 
     @ExceptionHandler(FornecedorNaoEncontradoException.class)
     public ResponseEntity<RespostaErro> tratarFornecedorNaoEncontrado(FornecedorNaoEncontradoException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Fornecedor não encontrado.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        return resposta(HttpStatus.NOT_FOUND, "Fornecedor não encontrado.", ex.getMessage());
     }
 
     @ExceptionHandler(CarrinhoNaoEncontradoException.class)
     public ResponseEntity<RespostaErro> tratarCarrinhoNaoEncontrado(CarrinhoNaoEncontradoException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Carrinho não encontrado.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
-    }
-
-    @ExceptionHandler(ProdutoJaExisteException.class)
-    public ResponseEntity<RespostaErro> tratarProdutoJaExistente(ProdutoJaExisteException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Já existe um produto com esse nome.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+        return resposta(HttpStatus.NOT_FOUND, "Carrinho não encontrado.", ex.getMessage());
     }
 
     @ExceptionHandler(ItemCarrinhoNaoEncontradoException.class)
     public ResponseEntity<RespostaErro> tratarItemCarrinhoNaoEncontrado(ItemCarrinhoNaoEncontradoException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Item não encontrado no carrinho.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        return resposta(HttpStatus.NOT_FOUND, "Item não encontrado no carrinho.", ex.getMessage());
     }
 
     @ExceptionHandler(VendaNaoEncontradaException.class)
     public ResponseEntity<RespostaErro> tratarVendaNaoEncontrada(VendaNaoEncontradaException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Venda não encontrada.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
+        return resposta(HttpStatus.NOT_FOUND, "Venda não encontrada.", ex.getMessage());
+    }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+    @ExceptionHandler(CompraNaoEncontradaException.class)
+    public ResponseEntity<RespostaErro> tratarCompraNaoEncontrada(CompraNaoEncontradaException ex) {
+        return resposta(HttpStatus.NOT_FOUND, "Compra não encontrada.", ex.getMessage());
+    }
+
+    @ExceptionHandler(ProdutoJaExisteException.class)
+    public ResponseEntity<RespostaErro> tratarProdutoJaExistente(ProdutoJaExisteException ex) {
+        return resposta(HttpStatus.CONFLICT, "Já existe um produto com esse nome.", ex.getMessage());
     }
 
     @ExceptionHandler(CategoriaJaExisteException.class)
     public ResponseEntity<RespostaErro> tratarCategoriaJaExistente(CategoriaJaExisteException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Já existe uma categoria com esse nome.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+        return resposta(HttpStatus.CONFLICT, "Já existe uma categoria com esse nome.", ex.getMessage());
     }
 
-    @ExceptionHandler(ClienteJaExisteException.class)
-    public ResponseEntity<RespostaErro> tratarClienteJaExistente(ClienteJaExisteException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Esse email já está cadastrado.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+    @ExceptionHandler(ClienteEmailJaExisteException.class)
+    public ResponseEntity<RespostaErro> tratarClienteEmailJaExistente(ClienteEmailJaExisteException ex) {
+        return resposta(HttpStatus.CONFLICT, "Esse email já está cadastrado.", ex.getMessage());
     }
 
     @ExceptionHandler(CnpjJaCadastradoException.class)
     public ResponseEntity<RespostaErro> tratarCnpjJaCadastrado(CnpjJaCadastradoException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Esse cnpj já está cadastrado.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+        return resposta(HttpStatus.CONFLICT, "Esse cnpj já está cadastrado.", ex.getMessage());
     }
 
     @ExceptionHandler(CarrinhoVazioException.class)
     public ResponseEntity<RespostaErro> tratarCarrinhoVazio(CarrinhoVazioException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Carrinho vazio.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+        return resposta(HttpStatus.BAD_REQUEST, "Carrinho vazio.", ex.getMessage());
     }
 
     @ExceptionHandler(EstoqueInsuficienteException.class)
     public ResponseEntity<RespostaErro> tratarEstoqueInsuficiente(EstoqueInsuficienteException ex) {
-        RespostaErro erro = new RespostaErro(
-            "Estoque insuficiente.",
-            ex.getMessage(),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+        return resposta(HttpStatus.BAD_REQUEST, "Estoque insuficiente.", ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RespostaErro> tratarErroValidacao(MethodArgumentNotValidException ex) {
         var campoErro = ex.getBindingResult().getFieldError();
-        
-        String mensagem = campoErro != null ? campoErro.getDefaultMessage() : "Dados inválidos.";
-        
-        RespostaErro erro = new RespostaErro(
-            "Dados enviados não passam nas regras de validação.",
-            mensagem,
-            LocalDateTime.now()
-        );
 
-        return ResponseEntity.badRequest().body(erro);
+        String mensagem = campoErro != null
+                ? campoErro.getDefaultMessage()
+                : "Dados inválidos.";
+
+        return resposta(
+                HttpStatus.BAD_REQUEST,
+                "Dados enviados não passam nas regras de validação.",
+                mensagem
+        );
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<RespostaErro> tratarJsonErro(HttpMessageNotReadableException ex) {
-        RespostaErro erro = new RespostaErro(
-          "Corpo da requisição inválido (JSON malformado).",
-          "Certifique-se de que o JSON enviado está com a sintaxe correta.",
-          LocalDateTime.now()
+        return resposta(
+                HttpStatus.BAD_REQUEST,
+                "Corpo da requisição inválido (JSON malformado).",
+                "Certifique-se de que o JSON enviado está com a sintaxe correta."
         );
-
-        return ResponseEntity.badRequest().body(erro);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<RespostaErro> tratarErroGenerico (Exception ex) {
-        RespostaErro erro = new RespostaErro (
-            "Erro interno no servidor.",
-            "Ocorreu uma falha inesperada no backend.",
-            LocalDateTime.now()
+    public ResponseEntity<RespostaErro> tratarErroGenerico(Exception ex) {
+        return resposta(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Erro interno no servidor.",
+                "Ocorreu uma falha inesperada no backend."
         );
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
     }
 
+    private ResponseEntity<RespostaErro> resposta(HttpStatus status, String titulo, String detalhes) {
+        return ResponseEntity.status(status)
+            .body(new RespostaErro (
+                titulo,
+                detalhes,
+                LocalDateTime.now()
+            ));
+    }
 }
