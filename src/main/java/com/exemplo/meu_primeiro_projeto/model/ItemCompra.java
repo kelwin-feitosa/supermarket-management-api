@@ -15,20 +15,27 @@ public class ItemCompra { //Itens da compra com o fornecedor
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Produto produto;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Compra compra;
 
     private Integer quantidade;
     private BigDecimal precoCompra;
+    private BigDecimal subtotal;
 
     protected ItemCompra() {}
 
-    public ItemCompra(Integer quantidade, BigDecimal precoCompra) {
+    public ItemCompra(Produto produto, Integer quantidade, BigDecimal precoCompra) {
+        this.produto = produto;
         this.quantidade = quantidade;
         this.precoCompra = precoCompra;
+        atualizarSubtotal();
+    }
+
+    private void atualizarSubtotal() {
+        this.subtotal = precoCompra.multiply(BigDecimal.valueOf(quantidade));
     }
 
     public Long getId() { return id; }
@@ -41,9 +48,17 @@ public class ItemCompra { //Itens da compra com o fornecedor
     public void setCompra(Compra compra) { this.compra = compra; }
 
     public Integer getQuantidade() { return quantidade; }
-    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
+    public void setQuantidade(Integer quantidade) { 
+        this.quantidade = quantidade; 
+        atualizarSubtotal();
+    }
 
     public BigDecimal getPrecoCompra() { return precoCompra; }
-    public void setPrecoCompra(BigDecimal precoCompra) { this.precoCompra = precoCompra; }
+    public void setPrecoCompra(BigDecimal precoCompra) { 
+        this.precoCompra = precoCompra; 
+        atualizarSubtotal();
+    }
+
+    public BigDecimal getSubtotal() { return this.subtotal; }
 
 }
