@@ -21,7 +21,7 @@ public class Compra {  //Representando as compras feitas com o fornecedor
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Fornecedor fornecedor;
 
     @OneToMany(
@@ -29,21 +29,25 @@ public class Compra {  //Representando as compras feitas com o fornecedor
     cascade = CascadeType.ALL,
     orphanRemoval = true
     )
-    private List<ItemCompra> itens = new ArrayList<>();;
+    private List<ItemCompra> itens = new ArrayList<>();
 
     private LocalDateTime dataCompra;
     private BigDecimal valorTotal;
 
     protected Compra() {}
 
-    public Compra(LocalDateTime dataCompra, BigDecimal valorTotal) {
-        this.dataCompra = dataCompra;
-        this.valorTotal = valorTotal;
+    public Compra(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
     @PrePersist
     public void prePersist() {
         dataCompra = LocalDateTime.now();
+    }
+
+    public void adicionarItem(ItemCompra item) {
+        item.setCompra(this);
+        this.itens.add(item);
     }
 
     public Long getId() { return id; }
@@ -52,8 +56,7 @@ public class Compra {  //Representando as compras feitas com o fornecedor
     public Fornecedor getFornecedor() { return fornecedor; }
     public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
 
-    public List<ItemCompra> getItemCompra() { return itens; }
-    public void setItens(List<ItemCompra> itens) { this.itens = itens; }
+    public List<ItemCompra> getItens() { return itens; }
 
     public LocalDateTime getDataCompra() { return dataCompra; }
     public void setDataCompra(LocalDateTime dataCompra) { this.dataCompra = dataCompra; }
