@@ -12,11 +12,11 @@ public record ItemCompraRequest(
     Long produtoId,
 
     @NotNull(message = "A quantidade é obrigatória.")
-    @Positive
+    @Positive(message = "A quantidade deve ser maior que zero.")
     Integer quantidade,
 
     @NotNull(message = "O preço de compra é obrigatório.")
-    @DecimalMin(value = "0.01")
+    @DecimalMin(value = "0.01", message = "O preço de compra deve ser maior que zero.")
     BigDecimal precoCompra
 ) {
 }
