@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.exemplo.meu_primeiro_projeto.dto.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
+import com.exemplo.meu_primeiro_projeto.exception.FornecedorEmUsoException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
@@ -59,15 +60,15 @@ public class FornecedorService {
         Fornecedor fornecedor = buscarEntidade(id);
 
         if (!fornecedor.getProdutos().isEmpty()) {
-            throw new IllegalArgumentException(
+            throw new FornecedorEmUsoException(
                 "Não é possível excluir um fornecedor que possui produtos cadastrados."
             );
         }
 
         if (!fornecedor.getCompras().isEmpty()) {
-            throw new IllegalArgumentException(
-                "Não é possível excluir um fornecedor que possui compras registradas."
-            );
+            fornecedor.setAtivo(false);
+            repository.save(fornecedor);
+            return;
         }
 
         repository.delete(fornecedor);
