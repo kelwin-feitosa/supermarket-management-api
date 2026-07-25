@@ -11,7 +11,8 @@ public record FornecedorRequest(
 
     @NotBlank(message = "O CNPJ é obrigatório.")
     @Pattern(
-        regexp = "^\\d{14}$",  // D de dígitos inteiros, 14 de quantidade de digitos  ^ para começo e $ para fim
+        // D de dígitos inteiros, 14 de quantidade de digitos  ^ para começo e $ para fim
+        regexp = "^\\d{14}$",  
         message = "O CNPJ deve conter exatamente 14 dígitos."
     )
     String cnpj,
