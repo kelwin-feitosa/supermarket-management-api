@@ -24,11 +24,11 @@ public class Fornecedor {
     @OneToMany(mappedBy = "fornecedor") 
     private List<Produto> produtos = new ArrayList<>();
 
-    private String nome;
-
     @Column(unique = true)
     private String cnpj;
     private String telefone;
+    private String nome;
+    private Boolean ativo;
 
     protected Fornecedor() {}
 
@@ -36,6 +36,7 @@ public class Fornecedor {
         this.nome = nome;
         this.cnpj = cnpj;
         this.telefone = telefone;
+        this.ativo = true;
     }
 
     public void atualizar(String nome, String cnpj, String telefone) {
@@ -61,5 +62,8 @@ public class Fornecedor {
 
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    public Boolean getAtivo() { return ativo; }
+    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
 
 }
