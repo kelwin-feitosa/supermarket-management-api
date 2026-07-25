@@ -21,4 +21,9 @@ public class EstoqueService {
             produto.getQuantidadeEstoque() - quantidade
         );
     }
+
+    public void aumentarEstoque(Produto produto, int quantidade) {
+        produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidade);
+    }
+
 }
