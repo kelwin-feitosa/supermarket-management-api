@@ -1,6 +1,5 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
-import com.exemplo.meu_primeiro_projeto.repository.ItemCarrinhoRepository;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -55,8 +54,7 @@ public class VendaService {
                 itemcarrinho.getPrecoUnitario()
             );
             
-            itemVenda.setVenda(venda);
-            venda.getItens().add(itemVenda);
+            venda.adicionarItem(itemVenda);
 
             estoqueService.baixarEstoque(produto, itemcarrinho.getQuantidade());
         }
