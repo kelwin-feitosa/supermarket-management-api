@@ -20,15 +20,15 @@ public class Fornecedor {
     @OneToMany(mappedBy = "fornecedor")
     private List<Compra> compras = new ArrayList<>();
 
-    //Consideremos que os produtos são de apenas um fornecedor
-    @OneToMany(mappedBy = "fornecedor") 
-    private List<Produto> produtos = new ArrayList<>();
-
     @Column(unique = true)
     private String cnpj;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     private String telefone;
     private String nome;
-    private Boolean ativo;
+    
 
     protected Fornecedor() {}
 
@@ -36,7 +36,6 @@ public class Fornecedor {
         this.nome = nome;
         this.cnpj = cnpj;
         this.telefone = telefone;
-        this.ativo = true;
     }
 
     public void atualizar(String nome, String cnpj, String telefone) {
@@ -51,19 +50,15 @@ public class Fornecedor {
     public List<Compra> getCompras() { return compras; }
     public void setCompras(List<Compra> compras) { this.compras = compras; }
 
-    public List<Produto> getProdutos() { return produtos; }
-    public void setProdutos(List<Produto> produtos) { this.produtos = produtos; }
-
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-
     public String getCnpj() { return cnpj; }
     public void setCnpj(String cnpj) { this.cnpj = cnpj; }
-
-    public String getTelefone() { return telefone; }
-    public void setTelefone(String telefone) { this.telefone = telefone; }
 
     public Boolean getAtivo() { return ativo; }
     public void setAtivo(Boolean ativo) { this.ativo = ativo; }
 
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 }
