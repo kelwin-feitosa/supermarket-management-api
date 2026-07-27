@@ -34,6 +34,11 @@ public class FornecedorController {
         return ResponseEntity.ok(service.listarFornecedores());
     }
 
+    @GetMapping("/ativos")
+    public ResponseEntity<List<FornecedorResponse>> listarFornecedoresAtivos() {
+        return ResponseEntity.ok(service.listarFornecedoresAtivos());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FornecedorResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
@@ -56,8 +61,8 @@ public class FornecedorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarFornecedor(@PathVariable Long id) {
-        service.deletarFornecedor(id);
+    public ResponseEntity<Void> desativarFornecedor(@PathVariable Long id) {
+        service.encerrarFornecedor(id);
 
         return ResponseEntity.noContent().build();
     }
