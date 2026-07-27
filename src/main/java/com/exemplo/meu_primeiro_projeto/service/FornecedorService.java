@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.exemplo.meu_primeiro_projeto.dto.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
-import com.exemplo.meu_primeiro_projeto.exception.FornecedorEmUsoException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
@@ -23,6 +22,13 @@ public class FornecedorService {
 
     public List<FornecedorResponse> listarFornecedores() {
         return repository.findAll()
+                .stream()
+                .map(this::converterParaResponse)
+                .toList();
+    }
+
+    public List<FornecedorResponse> listarFornecedoresAtivos() {
+        return repository.findByAtivoTrue()
                 .stream()
                 .map(this::converterParaResponse)
                 .toList();
@@ -56,14 +62,8 @@ public class FornecedorService {
         return converterParaResponse(fornecedor);   
     }
 
-    public void deletarFornecedor(Long id) {
+    public void encerrarFornecedor(Long id) {
         Fornecedor fornecedor = buscarEntidade(id);
-
-        if (!fornecedor.getProdutos().isEmpty()) {
-            throw new FornecedorEmUsoException(
-                "Não é possível excluir um fornecedor que possui produtos cadastrados."
-            );
-        }
 
         if (!fornecedor.getCompras().isEmpty()) {
             fornecedor.setAtivo(false);
