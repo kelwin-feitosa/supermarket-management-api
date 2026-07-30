@@ -38,6 +38,23 @@ A aplicação segue uma arquitetura em camadas:
 
 ---
 
+# 🧠 Conceitos aplicados
+
+Durante o desenvolvimento foram aplicados conceitos importantes de desenvolvimento backend:
+
+- Programação Orientada a Objetos.
+- Princípios SOLID.
+- Separação de responsabilidades.
+- Injeção de dependências.
+- Persistência com JPA/Hibernate.
+- Modelagem de banco relacional.
+- DTO Pattern.
+- Tratamento global de exceções.
+- Validação de dados.
+- Testes automatizados.
+
+---
+
 # 📂 Modelagem do Sistema
 
 O sistema possui as seguintes entidades:
@@ -93,6 +110,8 @@ O sistema possui as seguintes entidades:
 - ✅ Validação de estoque disponível
 - ✅ Tratamento global de exceções
 - ✅ Documentação da API utilizando Swagger/OpenAPI
+- ✅ Testes unitários dos Services
+- ✅ Validação das regras de negócio
 
 ---
 
@@ -520,13 +539,19 @@ src/main/java/com/exemplo/meu_primeiro_projeto
 
 # 🧪 Testes
 
-## Próximas implementações:
+O projeto possui testes unitários utilizando **JUnit 5** e **Mockito**, com foco na validação das regras de negócio implementadas nos Services.
 
-- Testes unitários utilizando JUnit 5.
-- Testes de regras de negócio dos Services.
-- Testes de integração dos Controllers.
-- Testes utilizando MockMvc.
-- Validação dos principais fluxos da aplicação.
+Implementados:
+
+- Testes unitários dos Services.
+- Validação de criação, atualização, busca e remoção de entidades.
+- Testes de exceções personalizadas.
+- Testes das regras de duplicidade e validações de negócio.
+
+Próximas implementações:
+
+- Testes de integração dos Controllers utilizando MockMvc.
+- Testes dos principais fluxos completos da aplicação.
 
 ---
 
