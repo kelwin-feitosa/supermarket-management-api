@@ -49,7 +49,7 @@ public class CategoriaServiceTest {
         when(repository.save(any(Categoria.class)))
             .thenReturn(categoriaSalva);
 
-        
+
 
         CategoriaResponse resposta = service.criarCategoria(request);
 
@@ -101,11 +101,11 @@ public class CategoriaServiceTest {
 
         assertEquals(2, resposta.size());
 
-        assertEquals("Bebidas", resposta.get(0).nome());
-        assertEquals("Produtos líquidos", resposta.get(0).descricao());
+        assertEquals(categoria1.getNome(), resposta.get(0).nome());
+        assertEquals(categoria1.getDescricao(), resposta.get(0).descricao());
 
-        assertEquals("Limpeza", resposta.get(1).nome());
-        assertEquals("Produtos de limpeza", resposta.get(1).descricao());
+        assertEquals(categoria2.getNome(), resposta.get(1).nome());
+        assertEquals(categoria2.getDescricao(), resposta.get(1).descricao());
 
 
         verify(repository).findAll();
@@ -121,8 +121,8 @@ public class CategoriaServiceTest {
         CategoriaResponse resposta = service.buscarPorId(categoria.getId());
 
         assertEquals(categoria.getId(), resposta.id());
-        assertEquals("Bebidas", resposta.nome());
-        assertEquals("Produtos líquidos", resposta.descricao());
+        assertEquals(categoria.getNome(), resposta.nome());
+        assertEquals(categoria.getDescricao(), resposta.descricao());
 
         verify(repository).findById(categoria.getId());
     }
@@ -162,8 +162,8 @@ public class CategoriaServiceTest {
 
         CategoriaResponse resposta = service.atualizarCategoria(categoria.getId(), request);
 
-        assertEquals("Bebidas Geladas", resposta.nome());
-        assertEquals("Refrigerantes e sucos", resposta.descricao());
+        assertEquals(request.nome(), resposta.nome());
+        assertEquals(request.descricao(), resposta.descricao());
 
         verify(repository).findById(1L);
         verify(repository).save(any(Categoria.class));
