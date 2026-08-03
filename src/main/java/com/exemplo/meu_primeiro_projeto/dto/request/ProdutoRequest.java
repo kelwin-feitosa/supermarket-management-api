@@ -1,4 +1,4 @@
-package com.exemplo.meu_primeiro_projeto.dto;
+package com.exemplo.meu_primeiro_projeto.dto.request;
 
 import java.math.BigDecimal;
 

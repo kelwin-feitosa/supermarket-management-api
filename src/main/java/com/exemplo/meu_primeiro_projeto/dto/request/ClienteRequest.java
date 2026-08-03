@@ -1,4 +1,4 @@
-package com.exemplo.meu_primeiro_projeto.dto;
+package com.exemplo.meu_primeiro_projeto.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
