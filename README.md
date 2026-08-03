@@ -22,6 +22,8 @@ O sistema contempla o gerenciamento de **produtos, categorias, clientes, fornece
 - Git e GitHub
 - Postman
 - Linux
+- JUnit 5
+- Mockito
 
 ---
 
@@ -51,7 +53,7 @@ Durante o desenvolvimento foram aplicados conceitos importantes de desenvolvimen
 - DTO Pattern.
 - Tratamento global de exceções.
 - Validação de dados.
-- Testes automatizados.
+- Testes unitários com JUnit 5 e Mockito.
 
 ---
 
@@ -110,7 +112,7 @@ O sistema possui as seguintes entidades:
 - ✅ Validação de estoque disponível
 - ✅ Tratamento global de exceções
 - ✅ Documentação da API utilizando Swagger/OpenAPI
-- ✅ Testes unitários dos Services
+- ✅ Testes unitários dos Services utilizando JUnit 5 e Mockito.
 - ✅ Validação das regras de negócio
 
 ---
@@ -208,25 +210,6 @@ Exceções tratadas:
 - Carrinho vazio
 - Erros de validação
 - JSON inválido
-
----
-
-# 📚 Documentação da API
-
-A API utiliza Swagger/OpenAPI para documentação dos endpoints.
-
-A documentação permite visualizar:
-
-- Endpoints disponíveis
-- Parâmetros necessários
-- Estrutura dos DTOs
-- Códigos de resposta HTTP
-- Exemplos de requisições e respostas
-
-Tecnologia utilizada:
-
-- Springdoc OpenAPI
-- Swagger UI
 
 ---
 
@@ -481,20 +464,27 @@ http://localhost:8080
 
 # 📚 Documentação da API
 
-A API possui documentação interativa utilizando Swagger/OpenAPI.
+A API utiliza **Springdoc OpenAPI** e **Swagger UI** para gerar documentação interativa dos endpoints.
 
-Após executar o projeto, acesse:
+Após iniciar a aplicação, acesse:
 
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
 
-Através do Swagger é possível:
+No Swagger é possível:
 
 - Visualizar todos os endpoints disponíveis.
-- Consultar parâmetros necessários.
+- Consultar parâmetros e validações.
+- Visualizar os DTOs de requisição e resposta.
 - Testar requisições diretamente pelo navegador.
-- Visualizar respostas de sucesso e erro.
+- Consultar códigos de resposta HTTP.
+- Visualizar exemplos de requisições e respostas.
+
+Tecnologias utilizadas:
+
+- Springdoc OpenAPI
+- Swagger UI
 
 ---
 
@@ -516,8 +506,8 @@ src/main/java/com/exemplo/meu_primeiro_projeto
 │   └── VendaController.java
 │
 ├── dto
-│   ├── Requests
-│   └── Responses
+│   ├── request
+│   └── response
 │
 ├── exception
 │   ├── GlobalExceptionHandler.java
@@ -547,6 +537,7 @@ Implementados:
 - Validação de criação, atualização, busca e remoção de entidades.
 - Testes de exceções personalizadas.
 - Testes das regras de duplicidade e validações de negócio.
+- Utilização de Mockito para isolamento das dependências.
 
 Próximas implementações:
 
@@ -580,8 +571,8 @@ Melhorias planejadas:
 
 # 🚀 Próximos Passos
 
-- Finalizar documentação completa com Swagger/OpenAPI.
-- Criar testes automatizados.
+- Expandir a documentação da API conforme novas funcionalidades.
+- Implementar testes de integração utilizando MockMvc.
 - Implementar autenticação e autorização.
 - Adicionar gerenciamento de usuários.
 - Implementar histórico de movimentações de estoque.
@@ -603,6 +594,7 @@ Este projeto foi desenvolvido com o objetivo de aplicar conhecimentos utilizados
 - Aplicação de regras de negócio.
 - Tratamento de exceções.
 - Boas práticas de organização de código.
+- Desenvolvimento orientado a testes unitários.
 
 ---
 
