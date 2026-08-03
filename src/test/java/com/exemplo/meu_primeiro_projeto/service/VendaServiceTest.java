@@ -258,6 +258,15 @@ public class VendaServiceTest {
 
         venda.setId(1L);
 
+        ItemVenda item = criarItemVendaPadrao();
+
+        venda.adicionarItem(item);
+        venda.setValorTotal(item.getSubtotal());
+
+        return venda;
+    }
+
+    private ItemVenda criarItemVendaPadrao() {
         Produto produto = criarProdutoPadrao();
 
         ItemVenda item = new ItemVenda(
@@ -268,9 +277,6 @@ public class VendaServiceTest {
 
         item.setId(1L);
 
-        venda.adicionarItem(item);
-        venda.setValorTotal(item.getSubtotal());
-
-        return venda;
+        return item;
     }
 }
