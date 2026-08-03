@@ -1,4 +1,4 @@
-package com.exemplo.meu_primeiro_projeto.exception;
+package com.exemplo.meu_primeiro_projeto.exception.handler;
 
 import java.time.LocalDateTime;
 
@@ -8,6 +8,23 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
+import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
+import com.exemplo.meu_primeiro_projeto.exception.CategoriaJaExisteException;
+import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;
+import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
+import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
+import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
+import com.exemplo.meu_primeiro_projeto.exception.EstoqueInsuficienteException;
+import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.exception.ItemCarrinhoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.exception.ProdutoJaExisteException;
+import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
+import com.exemplo.meu_primeiro_projeto.exception.VendaNaoEncontradaException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -70,6 +87,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CnpjJaCadastradoException.class)
     public ResponseEntity<RespostaErro> tratarCnpjJaCadastrado(CnpjJaCadastradoException ex) {
         return resposta(HttpStatus.CONFLICT, "Esse cnpj já está cadastrado.", ex.getMessage());
+    }
+
+    @ExceptionHandler(CategoriaEmUsoException.class)
+    public ResponseEntity<RespostaErro> tratarCategoriaEmUso(CategoriaEmUsoException ex) {
+        return resposta(HttpStatus.CONFLICT, "Categoria em uso.", ex.getMessage());
     }
 
     @ExceptionHandler(CarrinhoVazioException.class)
