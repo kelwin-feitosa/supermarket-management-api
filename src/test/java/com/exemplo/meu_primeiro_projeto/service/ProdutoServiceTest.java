@@ -2,7 +2,9 @@ package com.exemplo.meu_primeiro_projeto.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,15 +15,23 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
-import com.exemplo.meu_primeiro_projeto.dto.ProdutoRequest;
-import com.exemplo.meu_primeiro_projeto.dto.ProdutoResponse;
+import com.exemplo.meu_primeiro_projeto.dto.filter.ProdutoFiltro;
+import com.exemplo.meu_primeiro_projeto.dto.request.ProdutoRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.ProdutoResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.ProdutoMapper;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.model.Produto;
 import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
@@ -35,6 +45,9 @@ public class ProdutoServiceTest {
 
     @Mock
     ProdutoRepository produtoRepository;
+
+    @Mock
+    private ProdutoMapper mapper;
 
     @InjectMocks
     private ProdutoService service;
@@ -54,10 +67,17 @@ public class ProdutoServiceTest {
         when(produtoRepository.save(any(Produto.class)))
             .thenReturn(produto);
 
+        when(mapper.toEntity(request, categoria))
+            .thenReturn(produto);
+
+        when(mapper.toResponse(produto))
+            .thenReturn(criarResponsePadrao(produto));
+
 
         ProdutoResponse resposta = service.criarProduto(request);
 
         
+        assertEquals(produto.getId(), resposta.id());
         assertEquals(request.nome(), resposta.nome());
         assertEquals(request.preco(), resposta.preco());
         assertEquals(request.descricao(), resposta.descricao());
@@ -66,7 +86,9 @@ public class ProdutoServiceTest {
 
         verify(produtoRepository).existsByNome(request.nome());
         verify(categoriaRepository).findById(request.categoriaId());
-        verify(produtoRepository).save(any(Produto.class));
+        verify(mapper).toEntity(request, categoria);
+        verify(produtoRepository).save(produto);
+        verify(mapper).toResponse(produto);
     }
 
     @Test
@@ -81,6 +103,7 @@ public class ProdutoServiceTest {
             () -> service.criarProduto(request)
         );
 
+        
         verify(produtoRepository).existsByNome(request.nome());
         verify(categoriaRepository, never()).findById(request.categoriaId());
         verify(produtoRepository, never()).save(any(Produto.class));
@@ -107,10 +130,11 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    void listarProdutos_deveRetornarLista() {
+    void listarProdutos_deveRetornarPaginaDeProdutos() {
         Categoria categoria = criarCategoriaPadrao();
 
         Produto produto1 = criarProdutoPadrao();
+
         Produto produto2 = new Produto(
             "Fanta",
             new BigDecimal("4.99"),
@@ -120,28 +144,60 @@ public class ProdutoServiceTest {
         );
         produto2.setId(2L);
 
+        Pageable pageable = PageRequest.of(0, 10);
 
-        when(produtoRepository.findAll())
-            .thenReturn(List.of(produto1, produto2));
+        ProdutoFiltro filtro = new ProdutoFiltro(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        Page<Produto> pagina = new PageImpl<>(
+            List.of(produto1, produto2),
+            pageable,
+            2
+        );
+
+        when(produtoRepository.findAll(ArgumentMatchers.<Specification<Produto>>any(), eq(pageable)))
+            .thenReturn(pagina);
+
+        when(mapper.toResponse(produto1))
+            .thenReturn(criarResponsePadrao(produto1));
+
+        when(mapper.toResponse(produto2))
+            .thenReturn(criarResponsePadrao(produto2));
 
         
-        List<ProdutoResponse> resposta = service.listarProdutos();
+        Page<ProdutoResponse> resposta = service.listarProdutos(filtro, pageable);
 
-        assertEquals(2, resposta.size());
+        assertEquals(2, resposta.getContent().size());
 
-        assertEquals(produto1.getNome(), resposta.get(0).nome());
-        assertEquals(produto1.getPreco(), resposta.get(0).preco());
-        assertEquals(produto1.getDescricao(), resposta.get(0).descricao());
-        assertEquals(produto1.getQuantidadeEstoque(), resposta.get(0).quantidadeEstoque());
-        assertEquals(produto1.getCategoria().getId(), resposta.get(0).categoriaId());
+        assertEquals(2, resposta.getTotalElements());
+        assertEquals(1, resposta.getTotalPages());
+        assertTrue(resposta.isFirst());
+        assertTrue(resposta.isLast());
 
-        assertEquals(produto2.getNome(), resposta.get(1).nome());
-        assertEquals(produto2.getPreco(), resposta.get(1).preco());
-        assertEquals(produto2.getDescricao(), resposta.get(1).descricao());
-        assertEquals(produto2.getQuantidadeEstoque(), resposta.get(1).quantidadeEstoque());
-        assertEquals(produto2.getCategoria().getId(), resposta.get(1).categoriaId());
+        assertEquals(produto1.getNome(), resposta.getContent().get(0).nome());
+        assertEquals(produto1.getPreco(), resposta.getContent().get(0).preco());
+        assertEquals(produto1.getDescricao(), resposta.getContent().get(0).descricao());
+        assertEquals(produto1.getQuantidadeEstoque(), resposta.getContent().get(0).quantidadeEstoque());
+        assertEquals(produto1.getCategoria().getId(), resposta.getContent().get(0).categoriaId());
 
-        verify(produtoRepository).findAll();
+        assertEquals(produto2.getNome(), resposta.getContent().get(1).nome());
+        assertEquals(produto2.getPreco(), resposta.getContent().get(1).preco());
+        assertEquals(produto2.getDescricao(), resposta.getContent().get(1).descricao());
+        assertEquals(produto2.getQuantidadeEstoque(), resposta.getContent().get(1).quantidadeEstoque());
+        assertEquals(produto2.getCategoria().getId(), resposta.getContent().get(1).categoriaId());
+
+        verify(produtoRepository).findAll(
+            ArgumentMatchers.<Specification<Produto>>any(),
+            eq(pageable)
+        );
+        verify(mapper).toResponse(produto1);
+        verify(mapper).toResponse(produto2);
     }
 
     @Test
@@ -150,6 +206,9 @@ public class ProdutoServiceTest {
 
         when(produtoRepository.findById(produto.getId()))
             .thenReturn(Optional.of(produto));
+            
+        when(mapper.toResponse(produto))
+            .thenReturn(criarResponsePadrao(produto));
 
         ProdutoResponse resposta = service.buscarPorId(produto.getId());
 
@@ -161,6 +220,7 @@ public class ProdutoServiceTest {
         assertEquals(produto.getCategoria().getId(), resposta.categoriaId());
 
         verify(produtoRepository).findById(produto.getId());
+        verify(mapper).toResponse(produto);
     }
 
     @Test
@@ -182,13 +242,7 @@ public class ProdutoServiceTest {
     @Test
     void atualizarProduto_deveAtualizarComSucesso() {
         Categoria categoria = criarCategoriaPadrao();
-        ProdutoRequest request = new ProdutoRequest(
-            "Coca-Cola Zero",
-            new BigDecimal("6.99"),
-            "Refrigerante sem açúcar",
-            20,
-            1L
-        );
+        ProdutoRequest request = criarRequestAtualizacao();
 
         Produto produto = criarProdutoPadrao();
 
@@ -204,6 +258,10 @@ public class ProdutoServiceTest {
         when(produtoRepository.save(any(Produto.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
 
+        when(mapper.toResponse(any(Produto.class)))
+        .thenAnswer(invocation -> criarResponsePadrao(invocation.getArgument(0)));
+
+
         ProdutoResponse resposta = service.atualizarProduto(produto.getId(), request);
 
 
@@ -217,18 +275,13 @@ public class ProdutoServiceTest {
         verify(produtoRepository).findById(produto.getId());
         verify(produtoRepository).existsByNome(request.nome());
         verify(categoriaRepository).findById(request.categoriaId());
-        verify(produtoRepository).save(any(Produto.class));
+        verify(produtoRepository).save(produto);
+        verify(mapper).toResponse(produto);
     }
 
     @Test
     void atualizarProduto_deveLancarExcecaoQuandoProdutoNaoExistir() {
-        ProdutoRequest request = new ProdutoRequest(
-            "Coca-Cola Zero",
-            new BigDecimal("6.99"),
-            "Refrigerante sem açúcar",
-            20,
-            1L
-        );
+        ProdutoRequest request = criarRequestAtualizacao();
         Produto produto = criarProdutoPadrao();
 
         when(produtoRepository.findById(produto.getId()))
@@ -247,13 +300,7 @@ public class ProdutoServiceTest {
 
     @Test
     void atualizarProduto_deveLancarExcecaoQuandoNovoNomeJaExiste() {
-        ProdutoRequest request = new ProdutoRequest(
-            "Coca-Cola Zero",
-            new BigDecimal("6.99"),
-            "Refrigerante sem açúcar",
-            20,
-            1L
-        );
+        ProdutoRequest request = criarRequestAtualizacao();
         Produto produto = criarProdutoPadrao();
 
         when(produtoRepository.findById(produto.getId()))
@@ -275,13 +322,7 @@ public class ProdutoServiceTest {
 
     @Test
     void atualizarProduto_deveLancarExcecaoQuandoCategoriaNaoExistir() {
-        ProdutoRequest request = new ProdutoRequest(
-            "Coca-Cola Zero",
-            new BigDecimal("6.99"),
-            "Refrigerante sem açúcar",
-            20,
-            1L
-        );
+        ProdutoRequest request = criarRequestAtualizacao();
         Produto produto = criarProdutoPadrao();
 
         when(produtoRepository.findById(produto.getId()))
@@ -355,6 +396,28 @@ public class ProdutoServiceTest {
             "Refrigerante lata",
             10,
             1L
+        );
+    }
+
+    private ProdutoRequest criarRequestAtualizacao() {
+        return new ProdutoRequest(
+            "Coca-Cola Zero",
+            new BigDecimal("6.99"),
+            "Refrigerante sem açúcar",
+            20,
+            1L
+        );
+    }
+
+    private ProdutoResponse criarResponsePadrao(Produto produto) {
+        return new ProdutoResponse(
+            produto.getId(),
+            produto.getNome(),
+            produto.getPreco(),
+            produto.getDescricao(),
+            produto.getQuantidadeEstoque(),
+            produto.getCategoria().getId(),
+            produto.getDataCadastro()
         );
     }
 
