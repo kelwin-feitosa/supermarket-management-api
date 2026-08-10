@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.exemplo.meu_primeiro_projeto.dto.CarrinhoResponse;
-import com.exemplo.meu_primeiro_projeto.dto.ItemCarrinhoRequest;
-import com.exemplo.meu_primeiro_projeto.dto.ItemCarrinhoResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.ItemCarrinhoRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CarrinhoResponse;
+import com.exemplo.meu_primeiro_projeto.dto.response.ItemCarrinhoResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ItemCarrinhoNaoEncontradoException;

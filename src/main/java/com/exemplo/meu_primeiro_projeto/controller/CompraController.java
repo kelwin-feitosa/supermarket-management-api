@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exemplo.meu_primeiro_projeto.dto.CompraRequest;
-import com.exemplo.meu_primeiro_projeto.dto.CompraResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
 import com.exemplo.meu_primeiro_projeto.service.CompraService;
 

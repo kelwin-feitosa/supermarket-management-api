@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.exemplo.meu_primeiro_projeto.dto.ItemVendaResponse;
-import com.exemplo.meu_primeiro_projeto.dto.VendaResponse;
+import com.exemplo.meu_primeiro_projeto.dto.response.ItemVendaResponse;
+import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
 import com.exemplo.meu_primeiro_projeto.exception.VendaNaoEncontradaException;

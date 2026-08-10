@@ -18,8 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exemplo.meu_primeiro_projeto.dto.CategoriaRequest;
-import com.exemplo.meu_primeiro_projeto.dto.CategoriaResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.CategoriaRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exemplo.meu_primeiro_projeto.dto.CarrinhoResponse;
-import com.exemplo.meu_primeiro_projeto.dto.ItemCarrinhoRequest;
+import com.exemplo.meu_primeiro_projeto.dto.request.ItemCarrinhoRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CarrinhoResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
 import com.exemplo.meu_primeiro_projeto.service.CarrinhoService;
 

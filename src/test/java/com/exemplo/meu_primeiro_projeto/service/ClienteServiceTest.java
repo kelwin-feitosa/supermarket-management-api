@@ -16,8 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exemplo.meu_primeiro_projeto.dto.ClienteRequest;
-import com.exemplo.meu_primeiro_projeto.dto.ClienteResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;

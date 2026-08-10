@@ -16,8 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exemplo.meu_primeiro_projeto.dto.FornecedorRequest;
-import com.exemplo.meu_primeiro_projeto.dto.FornecedorResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.FornecedorRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.model.Compra;

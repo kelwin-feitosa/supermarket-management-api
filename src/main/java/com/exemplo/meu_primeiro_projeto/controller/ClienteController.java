@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exemplo.meu_primeiro_projeto.dto.ClienteRequest;
-import com.exemplo.meu_primeiro_projeto.dto.ClienteResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
 import com.exemplo.meu_primeiro_projeto.service.ClienteService;
 

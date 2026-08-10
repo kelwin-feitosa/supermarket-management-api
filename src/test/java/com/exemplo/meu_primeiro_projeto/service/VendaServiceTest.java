@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exemplo.meu_primeiro_projeto.dto.VendaResponse;
+import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
 import com.exemplo.meu_primeiro_projeto.exception.VendaNaoEncontradaException;

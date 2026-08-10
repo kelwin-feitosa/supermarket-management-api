@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.exemplo.meu_primeiro_projeto.dto.CompraRequest;
-import com.exemplo.meu_primeiro_projeto.dto.CompraResponse;
-import com.exemplo.meu_primeiro_projeto.dto.ItemCompraRequest;
-import com.exemplo.meu_primeiro_projeto.dto.ItemCompraResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
+import com.exemplo.meu_primeiro_projeto.dto.request.ItemCompraRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
+import com.exemplo.meu_primeiro_projeto.dto.response.ItemCompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;

@@ -18,9 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exemplo.meu_primeiro_projeto.dto.CompraRequest;
-import com.exemplo.meu_primeiro_projeto.dto.CompraResponse;
-import com.exemplo.meu_primeiro_projeto.dto.ItemCompraRequest;
+import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
+import com.exemplo.meu_primeiro_projeto.dto.request.ItemCompraRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;

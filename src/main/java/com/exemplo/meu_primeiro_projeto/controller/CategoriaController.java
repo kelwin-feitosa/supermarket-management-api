@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exemplo.meu_primeiro_projeto.dto.CategoriaRequest;
-import com.exemplo.meu_primeiro_projeto.dto.CategoriaResponse;
+import com.exemplo.meu_primeiro_projeto.dto.request.CategoriaRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
 import com.exemplo.meu_primeiro_projeto.service.CategoriaService;
 
