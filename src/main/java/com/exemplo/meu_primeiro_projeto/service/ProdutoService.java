@@ -1,44 +1,49 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.exemplo.meu_primeiro_projeto.dto.ProdutoRequest;
-import com.exemplo.meu_primeiro_projeto.dto.ProdutoResponse;
+import com.exemplo.meu_primeiro_projeto.dto.filter.ProdutoFiltro;
+import com.exemplo.meu_primeiro_projeto.dto.request.ProdutoRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.ProdutoResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.ProdutoMapper;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.model.Produto;
 import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ProdutoRepository;
+import com.exemplo.meu_primeiro_projeto.repository.specification.ProdutoSpecification;
 
 @Service
 public class ProdutoService {
     
     private final ProdutoRepository repository;
     private final CategoriaRepository categoriaRepository;
+    private final ProdutoMapper mapper;
     
-    public ProdutoService(ProdutoRepository repository, CategoriaRepository categoriaRepository) {
+    public ProdutoService(ProdutoRepository repository, CategoriaRepository categoriaRepository, ProdutoMapper mapper) {
         this.repository = repository;
         this.categoriaRepository = categoriaRepository;
+        this.mapper = mapper;
     }
 
 
-    public List<ProdutoResponse> listarProdutos() {
-        return repository.findAll()
-                .stream()
-                .map(this::converterParaResponse)
-                .toList();
+    public Page<ProdutoResponse> listarProdutos(ProdutoFiltro filtro, Pageable pageable) {
+        return repository.findAll(ProdutoSpecification.comFiltro(filtro), pageable)
+                .map(mapper::toResponse);
     }
 
     public ProdutoResponse criarProduto(ProdutoRequest request) {
         verificarDuplicidade(request);
+        
+        Categoria categoria = buscarCategoria(request.categoriaId());
 
-        Produto salvo = repository.save(converterParaProduto(request));
+        Produto salvo = repository.save(mapper.toEntity(request, categoria));
 
-        return converterParaResponse(salvo);
+        return mapper.toResponse(salvo);
     }
 
     public ProdutoResponse atualizarProduto(Long id, ProdutoRequest request) {
@@ -54,42 +59,16 @@ public class ProdutoService {
             categoria
         );
 
-        return converterParaResponse(repository.save(produto));
+        return mapper.toResponse(repository.save(produto));
     }
 
     public ProdutoResponse buscarPorId(Long id) {
-        return converterParaResponse(buscarEntidade(id));
+        return mapper.toResponse(buscarEntidade(id));
     }
 
     public void deletarProduto(Long id) {
         Produto produto = buscarEntidade(id);
         repository.delete(produto);                   
-    }
-
-    private Produto converterParaProduto(ProdutoRequest request) {
-        Categoria categoria = buscarCategoria(request.categoriaId());
-
-        return new Produto(
-            request.nome(),
-            request.preco(),
-            request.descricao(),
-            request.quantidadeEstoque(),
-            categoria
-        );
-    }
-
-    private ProdutoResponse converterParaResponse(Produto produto){
-        Long categoriaId = produto.getCategoria().getId();
-
-        return new ProdutoResponse (
-            produto.getId(),
-            produto.getNome(),
-            produto.getPreco(),
-            produto.getDescricao(),
-            produto.getQuantidadeEstoque(),
-            categoriaId,
-            produto.getDataCadastro()
-        );
     }
 
     private Produto buscarEntidade(Long id) { //Para uso interno
