@@ -11,7 +11,7 @@ public class ProdutoSpecification {
 
     public static Specification<Produto> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -23,7 +23,7 @@ public class ProdutoSpecification {
 
     public static Specification<Produto> categoriaIgual(Long categoriaId) {
         if (categoriaId == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -35,7 +35,7 @@ public class ProdutoSpecification {
 
     public static Specification<Produto> precoMaiorOuIgual(BigDecimal precoMin) {
         if (precoMin == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -47,7 +47,7 @@ public class ProdutoSpecification {
 
     public static Specification<Produto> precoMenorOuIgual(BigDecimal precoMax) {
         if (precoMax == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -59,7 +59,7 @@ public class ProdutoSpecification {
 
     public static Specification<Produto> estoqueMaiorOuIgual(Integer estoqueMin) {
         if (estoqueMin == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -71,7 +71,7 @@ public class ProdutoSpecification {
 
     public static Specification<Produto> estoqueMenorOuIgual(Integer estoqueMax) {
         if (estoqueMax == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
