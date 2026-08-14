@@ -10,22 +10,34 @@ import com.exemplo.meu_primeiro_projeto.model.Produto;
 public class ProdutoSpecification {
 
     public static Specification<Produto> nomeContem(String nome) {
-        return (root, query, criteriaBuilder) -> 
+        if (nome == null || nome.isBlank()) {
+            return null;
+        }
+
+        return (root, query, criteriaBuilder) ->
             criteriaBuilder.like(
-                root.get("nome"),
-                "%" + nome + "%"
+                criteriaBuilder.lower(root.get("nome")),
+                "%" + nome.toLowerCase() + "%"
             );
     }
 
     public static Specification<Produto> categoriaIgual(Long categoriaId) {
+        if (categoriaId == null) {
+            return null;
+        }
+
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.equal(
                 root.get("categoria").get("id"),
                 categoriaId
             );
-    }       
+    }
 
     public static Specification<Produto> precoMaiorOuIgual(BigDecimal precoMin) {
+        if (precoMin == null) {
+            return null;
+        }
+
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.greaterThanOrEqualTo(
                 root.get("preco"),
@@ -34,6 +46,10 @@ public class ProdutoSpecification {
     }
 
     public static Specification<Produto> precoMenorOuIgual(BigDecimal precoMax) {
+        if (precoMax == null) {
+            return null;
+        }
+
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.lessThanOrEqualTo(
                 root.get("preco"),
@@ -42,6 +58,10 @@ public class ProdutoSpecification {
     }
 
     public static Specification<Produto> estoqueMaiorOuIgual(Integer estoqueMin) {
+        if (estoqueMin == null) {
+            return null;
+        }
+
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.greaterThanOrEqualTo(
                 root.get("quantidadeEstoque"),
@@ -50,6 +70,10 @@ public class ProdutoSpecification {
     }
 
     public static Specification<Produto> estoqueMenorOuIgual(Integer estoqueMax) {
+        if (estoqueMax == null) {
+            return null;
+        }
+
         return (root, query, criteriaBuilder) ->
             criteriaBuilder.lessThanOrEqualTo(
                 root.get("quantidadeEstoque"),
@@ -58,44 +82,13 @@ public class ProdutoSpecification {
     }
 
     public static Specification<Produto> comFiltro(ProdutoFiltro filtro) {
-        Specification<Produto> specification = (root, query, criteriaBuilder) -> null;
-
-        if(filtro.nome() != null && !filtro.nome().isBlank()) {
-            specification = specification.and(
-                nomeContem(filtro.nome())
-            );
-        }
-
-        if(filtro.categoriaId() != null) {
-            specification = specification.and(
-                categoriaIgual(filtro.categoriaId())
-            );
-        }
-
-        if (filtro.precoMin() != null) {
-            specification = specification.and(
-                precoMaiorOuIgual(filtro.precoMin())
-            );
-        }
-
-        if (filtro.precoMax() != null) {
-            specification = specification.and(
-                precoMenorOuIgual(filtro.precoMax())
-            );
-        }
-
-        if (filtro.estoqueMin() != null) {
-            specification = specification.and(
-                estoqueMaiorOuIgual(filtro.estoqueMin())
-            );
-        }
-
-        if (filtro.estoqueMax() != null) {
-            specification = specification.and(
-                estoqueMenorOuIgual(filtro.estoqueMax())
-            );
-        }
-
-        return specification;
+        return Specification.allOf(
+            nomeContem(filtro.nome()),
+            categoriaIgual(filtro.categoriaId()),
+            precoMaiorOuIgual(filtro.precoMin()),
+            precoMenorOuIgual(filtro.precoMax()),
+            estoqueMaiorOuIgual(filtro.estoqueMin()),
+            estoqueMenorOuIgual(filtro.estoqueMax())
+        );
     }
 }
