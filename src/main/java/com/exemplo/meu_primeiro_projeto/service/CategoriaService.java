@@ -9,31 +9,34 @@ import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;
+import com.exemplo.meu_primeiro_projeto.mapper.CategoriaMapper;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
 
 @Service
 public class CategoriaService {
     private final CategoriaRepository repository;
+    private final CategoriaMapper mapper;
 
-    public CategoriaService(CategoriaRepository repository) {
+    public CategoriaService(CategoriaRepository repository, CategoriaMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public List<CategoriaResponse> listarCategorias() {
         return repository.findAll()
                 .stream()
-                .map(this::converterParaResponse)
+                .map(mapper::toResponse)
                 .toList();
     }
 
     public CategoriaResponse criarCategoria(CategoriaRequest request) {
         verificarDuplicidade(request); //Verifica se não existe um igual
 
-        Categoria categoria = converterParaCategoria(request);
+        Categoria categoria = mapper.toEntity(request);
         Categoria categoriaSalva = repository.save(categoria);
 
-        return converterParaResponse(categoriaSalva);
+        return mapper.toResponse(categoriaSalva);
     }
 
     public CategoriaResponse atualizarCategoria(Long id, CategoriaRequest request) {
@@ -47,11 +50,11 @@ public class CategoriaService {
             request.descricao()
         );
 
-        return converterParaResponse(repository.save(categoria));
+        return mapper.toResponse(repository.save(categoria));
     }
 
     public CategoriaResponse buscarPorId(Long id) {
-        return converterParaResponse(buscarEntidade(id));
+        return mapper.toResponse(buscarEntidade(id));
     }
 
     public void deletarCategoria(Long id) {
@@ -63,21 +66,6 @@ public class CategoriaService {
             );
         }
         repository.delete(categoria);
-    }
-
-    private CategoriaResponse converterParaResponse(Categoria categoria) {
-        return new CategoriaResponse(
-            categoria.getId(),
-            categoria.getNome(),
-            categoria.getDescricao()
-        );
-    }
-
-    private Categoria converterParaCategoria(CategoriaRequest request) {
-        return new Categoria(
-            request.nome(),
-            request.descricao()
-        );
     }
 
     private Categoria buscarEntidade(Long id) {
