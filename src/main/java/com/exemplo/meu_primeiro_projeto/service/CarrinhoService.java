@@ -1,18 +1,17 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.exemplo.meu_primeiro_projeto.dto.request.ItemCarrinhoRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CarrinhoResponse;
-import com.exemplo.meu_primeiro_projeto.dto.response.ItemCarrinhoResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ItemCarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.CarrinhoMapper;
 import com.exemplo.meu_primeiro_projeto.model.Carrinho;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
 import com.exemplo.meu_primeiro_projeto.model.ItemCarrinho;
@@ -31,14 +30,16 @@ public class CarrinhoService {
     private final ItemCarrinhoRepository itemCarrinhoRepository;
     private final EstoqueService estoqueService;
     private final CalculoPrecoService calculoPrecoService;
+    private final CarrinhoMapper mapper;
 
-    public CarrinhoService(CarrinhoRepository carRepository, ClienteRepository cliRepository, ProdutoRepository produtoRepository, ItemCarrinhoRepository itemCarrinhoRepository, EstoqueService estoqueService, CalculoPrecoService calculoPrecoService) {
+    public CarrinhoService(CarrinhoRepository carRepository, ClienteRepository cliRepository, ProdutoRepository produtoRepository, ItemCarrinhoRepository itemCarrinhoRepository, EstoqueService estoqueService, CalculoPrecoService calculoPrecoService, CarrinhoMapper mapper) {
         this.carrinhoRepository = carRepository;
         this.clienteRepository = cliRepository;
         this.produtoRepository = produtoRepository;
         this.itemCarrinhoRepository = itemCarrinhoRepository;
         this.estoqueService = estoqueService;
         this.calculoPrecoService = calculoPrecoService;
+        this.mapper = mapper;
     }
 
     public CarrinhoResponse criarCarrinho(Long idCliente) {
@@ -46,7 +47,7 @@ public class CarrinhoService {
 
         carrinho = carrinhoRepository.save(carrinho);
 
-        return carrinhoParaResponse(carrinho, BigDecimal.ZERO);
+        return mapper.toResponse(carrinho, BigDecimal.ZERO);
     }
 
     public CarrinhoResponse adicionarItem(ItemCarrinhoRequest request) {
@@ -71,11 +72,11 @@ public class CarrinhoService {
             itemCarrinhoRepository.save(itemCarrinho);
 
         } else {
-            itemCarrinho = criarItemCarrinho(request, produto);
+            itemCarrinho = mapper.toItemEntity(request, produto);
             carrinho.adicionarItem(itemCarrinho);
         }
 
-        return carrinhoParaResponse(carrinho, calculoPrecoService.calcularValorTotal(carrinho.getItens()));
+        return mapper.toResponse(carrinho, calculoPrecoService.calcularValorTotal(carrinho.getItens()));
     }
 
     public void removerItem(ItemCarrinhoRequest request) {
@@ -91,7 +92,7 @@ public class CarrinhoService {
         itemCarrinhoRepository.deleteAll(carrinho.getItens());
         carrinho.getItens().clear();
 
-        return carrinhoParaResponse(carrinho, BigDecimal.ZERO);
+        return mapper.toResponse(carrinho, BigDecimal.ZERO);
     }
 
     public CarrinhoResponse alterarQuantidade(ItemCarrinhoRequest request) {
@@ -103,16 +104,9 @@ public class CarrinhoService {
         item.setQuantidade(request.quantidade());
         itemCarrinhoRepository.save(item);
 
-        return carrinhoParaResponse(carrinho, calculoPrecoService.calcularValorTotal(carrinho.getItens()));
+        return mapper.toResponse(carrinho, calculoPrecoService.calcularValorTotal(carrinho.getItens()));
     }
 
-    private ItemCarrinho criarItemCarrinho(ItemCarrinhoRequest request, Produto produto) {
-        return new ItemCarrinho(
-            produto,
-            request.quantidade(),
-            produto.getPreco()
-        );
-    }
 
     private Cliente verificarCliente(Long idCliente) {
         return clienteRepository.findById(idCliente)
@@ -134,34 +128,10 @@ public class CarrinhoService {
                         .orElseThrow(() -> new ItemCarrinhoNaoEncontradoException("Produto não está no carrinho."));
     }
 
-    private CarrinhoResponse carrinhoParaResponse(Carrinho carrinho, BigDecimal valorTotal) {
-        List<ItemCarrinhoResponse> itens = carrinho.getItens()
-            .stream()
-            .map(this::itemcarrinhoParaResponse)
-            .toList();
-
-        return new CarrinhoResponse(
-            carrinho.getId(),
-            valorTotal,
-            itens
-        );
-    }
-
     private Optional<ItemCarrinho> buscarItem(Carrinho carrinho, Long idProduto) {
         return carrinho.getItens()
                 .stream()
                 .filter(i -> i.getProduto().getId().equals(idProduto))
                 .findFirst();
-    }
-
-    private ItemCarrinhoResponse itemcarrinhoParaResponse(ItemCarrinho item) {
-        return new ItemCarrinhoResponse(
-            item.getId(),
-            item.getProduto().getId(),
-            item.getProduto().getNome(),
-            item.getQuantidade(),
-            item.getPrecoUnitario(),
-            item.getSubtotal()
-        );
     }
 }
