@@ -8,6 +8,7 @@ import com.exemplo.meu_primeiro_projeto.dto.request.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.FornecedorMapper;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
 
@@ -15,35 +16,37 @@ import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
 public class FornecedorService {
 
     private final FornecedorRepository repository;
+    private final FornecedorMapper mapper;
 
-    public FornecedorService(FornecedorRepository repository) {
+    public FornecedorService(FornecedorRepository repository, FornecedorMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public List<FornecedorResponse> listarFornecedores() {
         return repository.findAll()
                 .stream()
-                .map(this::converterParaResponse)
+                .map(mapper::toResponse)
                 .toList();
     }
 
     public List<FornecedorResponse> listarFornecedoresAtivos() {
         return repository.findByAtivoTrue()
                 .stream()
-                .map(this::converterParaResponse)
+                .map(mapper::toResponse)
                 .toList();
     }
 
     public FornecedorResponse buscarPorId(Long id) {
-        return converterParaResponse(buscarEntidade(id));
+        return mapper.toResponse(buscarEntidade(id));
     }
 
     public FornecedorResponse criarFornecedor(FornecedorRequest request) {
         verificarDuplicidade(request);
 
-        Fornecedor fornecedor = repository.save(converterParaFornecedor(request));
+        Fornecedor fornecedor = repository.save(mapper.toEntity(request));
 
-        return converterParaResponse(fornecedor);
+        return mapper.toResponse(fornecedor);
     }
 
     public FornecedorResponse atualizarFornecedor(Long id, FornecedorRequest request) {
@@ -59,7 +62,7 @@ public class FornecedorService {
         
         fornecedor = repository.save(fornecedor);
 
-        return converterParaResponse(fornecedor);   
+        return mapper.toResponse(fornecedor);   
     }
 
     public void encerrarFornecedor(Long id) {
@@ -80,23 +83,6 @@ public class FornecedorService {
                 .orElseThrow(() -> new FornecedorNaoEncontradoException(
                     "Fornecedor não encontrado.")
                 );
-    }
-
-    private FornecedorResponse converterParaResponse(Fornecedor fornecedor) {
-        return new FornecedorResponse(
-            fornecedor.getId(),
-            fornecedor.getNome(),
-            fornecedor.getCnpj(),
-            fornecedor.getTelefone()
-        );
-    }
-
-    private Fornecedor converterParaFornecedor(FornecedorRequest request) {
-        return new Fornecedor(
-            request.nome(),
-            request.cnpj(),
-            request.telefone()
-        );
     }
 
     private void verificarDuplicidade(FornecedorRequest request) {
