@@ -8,6 +8,7 @@ import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.ClienteMapper;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
 import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
 
@@ -15,28 +16,30 @@ import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
 public class ClienteService {
 
     private final ClienteRepository repository;
+    private final ClienteMapper mapper;
 
-    public ClienteService(ClienteRepository repository) {
+    public ClienteService(ClienteRepository repository, ClienteMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public List<ClienteResponse> listarClientes() {
         return repository.findAll()
                     .stream()
-                    .map(this::converterParaResponse)
+                    .map(mapper::toResponse)
                     .toList();
     }
 
     public ClienteResponse buscarPorId(Long id) {
-        return converterParaResponse(buscarEntidade(id));
+        return mapper.toResponse(buscarEntidade(id));
     }
 
     public ClienteResponse criarCliente(ClienteRequest request) {
         verificarDuplicidade(request);
 
-        Cliente clienteSalvo = repository.save(converterParaCliente(request));
+        Cliente clienteSalvo = repository.save(mapper.toEntity(request));
 
-        return converterParaResponse(clienteSalvo);
+        return mapper.toResponse(clienteSalvo);
     }
 
     public ClienteResponse atualizarCliente(Long id, ClienteRequest request) {
@@ -50,30 +53,13 @@ public class ClienteService {
             request.telefone()
         );
 
-        return converterParaResponse(repository.save(cliente));
+        return mapper.toResponse(repository.save(cliente));
     }
 
     public void deletarCliente(Long id) {
         Cliente cliente = buscarEntidade(id);
         
         repository.delete(cliente);
-    }
-
-    private Cliente converterParaCliente(ClienteRequest request) {
-        return new Cliente(
-            request.nome(),
-            request.email(),
-            request.telefone()
-        );
-    }
-
-    private ClienteResponse converterParaResponse(Cliente cliente) {
-        return new ClienteResponse(
-            cliente.getId(),
-            cliente.getNome(),
-            cliente.getEmail(),
-            cliente.getTelefone()
-        );
     }
 
     private Cliente buscarEntidade(Long id) {
