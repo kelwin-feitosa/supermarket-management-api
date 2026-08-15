@@ -8,12 +8,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
-import com.exemplo.meu_primeiro_projeto.dto.request.ItemCompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
-import com.exemplo.meu_primeiro_projeto.dto.response.ItemCompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.CompraMapper;
 import com.exemplo.meu_primeiro_projeto.model.Compra;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.model.ItemCompra;
@@ -30,13 +29,15 @@ public class CompraService {
     private final EstoqueService estoqueService;
     private final CalculoPrecoService calculoPrecoService;
     private final ProdutoRepository produtoRepository;
+    private final CompraMapper mapper;
 
-    public CompraService(CompraRepository compraRepository, EstoqueService estoqueService, CalculoPrecoService calculoPrecoService, FornecedorRepository fornecedorRepository, ProdutoRepository produtoRepository) {
+    public CompraService(CompraRepository compraRepository, EstoqueService estoqueService, CalculoPrecoService calculoPrecoService, FornecedorRepository fornecedorRepository, ProdutoRepository produtoRepository, CompraMapper mapper) {
         this.compraRepository = compraRepository;
         this.estoqueService = estoqueService;
         this.calculoPrecoService = calculoPrecoService;
         this.fornecedorRepository = fornecedorRepository;
         this.produtoRepository = produtoRepository;
+        this.mapper = mapper;
     }
 
     @Transactional
@@ -44,7 +45,9 @@ public class CompraService {
         Fornecedor fornecedor = verificarFornecedor(request.fornecedorId());
 
         List<ItemCompra> itens = request.itens().stream()
-                                .map(this::converterParaItemCompra)
+                                .map(itemRequest -> mapper.toItemEntity(
+                                    itemRequest, verificarProduto(itemRequest.produtoId())
+                                ))
                                 .toList();
 
         Compra compra = new Compra(fornecedor);
@@ -58,18 +61,18 @@ public class CompraService {
         compra.setValorTotal(calculoPrecoService.calcularValorTotalCompra(compra.getItens()));
         compraRepository.save(compra);
 
-        return compraParaResponse(compra);
+        return mapper.toResponse(compra);
     }
 
     public CompraResponse buscarCompra(Long idCompra) {
         Compra compra = verificarCompra(idCompra);
 
-        return compraParaResponse(compra);
+        return mapper.toResponse(compra);
     }
 
     public List<CompraResponse> listarCompras() {
         return compraRepository.findAll().stream()
-                .map(this::compraParaResponse)
+                .map(mapper::toResponse)
                 .toList();
     }
 
@@ -86,39 +89,5 @@ public class CompraService {
     private Produto verificarProduto(Long idProduto) {
         return produtoRepository.findById(idProduto)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrado"));
-    }
-
-    private CompraResponse compraParaResponse(Compra compra) {
-        List<ItemCompraResponse> itens = compra.getItens().stream()
-                    .map(this::itemParaResponse)
-                    .toList();
-
-        return new CompraResponse(
-            compra.getId(),
-            compra.getFornecedor().getId(),
-            compra.getDataCompra(),
-            compra.getValorTotal(),
-            itens
-        );
-    }
-
-    private ItemCompraResponse itemParaResponse(ItemCompra item) {
-        return new ItemCompraResponse(
-            item.getId(),
-            item.getProduto().getId(),
-            item.getProduto().getNome(),
-            item.getQuantidade(),
-            item.getPrecoCompra(),
-            item.getSubtotal()
-        );
-    }
-
-    private ItemCompra converterParaItemCompra(ItemCompraRequest request) {
-        Produto produto = verificarProduto(request.produtoId());
-        return new ItemCompra(
-            produto,
-            request.quantidade(),
-            request.precoCompra()
-        );
     }
 }
