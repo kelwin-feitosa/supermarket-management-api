@@ -20,6 +20,7 @@ import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.ClienteMapper;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
 import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
 
@@ -29,6 +30,9 @@ public class ClienteServiceTest {
     @Mock
     private ClienteRepository repository;
 
+    @Mock
+    private ClienteMapper mapper;
+
     @InjectMocks
     private ClienteService service;
 
@@ -36,22 +40,30 @@ public class ClienteServiceTest {
     void criarCliente_deveCriarComSucesso() {
         ClienteRequest request = criarRequestPadrao();
         Cliente cliente = criarClientePadrao();
+        ClienteResponse response = criarResponsePadrao();
 
         when(repository.existsByEmail(request.email()))
             .thenReturn(false);
 
+        when(mapper.toEntity(request))
+            .thenReturn(cliente);
+
         when(repository.save(any(Cliente.class)))
             .thenReturn(cliente);
 
-        ClienteResponse resposta = service.criarCliente(request);
+        when(mapper.toResponse(cliente))
+            .thenReturn(response);
 
+        ClienteResponse resposta = service.criarCliente(request);
 
         assertEquals(request.nome(), resposta.nome());
         assertEquals(request.email(), resposta.email());
         assertEquals(request.telefone(), resposta.telefone());
 
         verify(repository).existsByEmail(request.email());
+        verify(mapper).toEntity(request);
         verify(repository).save(any(Cliente.class));
+        verify(mapper).toResponse(cliente);
     }
 
     @Test
@@ -80,9 +92,20 @@ public class ClienteServiceTest {
         );
         cliente2.setId(2L);
 
+        ClienteResponse response1 = criarResponsePadrao();
 
-        when(repository.findAll())
-            .thenReturn(List.of(cliente1, cliente2));
+        ClienteResponse response2 = new ClienteResponse(
+            2L,
+            "Maria",
+            "maria@email.com",
+            "99999-9999"
+        );
+
+        when(mapper.toResponse(cliente1))
+            .thenReturn(response1);
+
+        when(mapper.toResponse(cliente2))
+            .thenReturn(response2);
 
 
         List<ClienteResponse> resposta = service.listarClientes();
@@ -98,15 +121,20 @@ public class ClienteServiceTest {
         assertEquals(cliente2.getEmail(), resposta.get(1).email());
         assertEquals(cliente2.getTelefone(), resposta.get(1).telefone());
 
-        verify(repository).findAll();
+        verify(mapper).toResponse(cliente1);
+        verify(mapper).toResponse(cliente2);
     }
 
     @Test
     void buscarPorId_deveRetornarClienteQuandoExistir() {
         Cliente cliente = criarClientePadrao();
+        ClienteResponse response = criarResponsePadrao();
 
         when(repository.findById(cliente.getId()))
             .thenReturn(Optional.of(cliente));
+
+        when(mapper.toResponse(cliente))
+            .thenReturn(response);
 
         ClienteResponse resposta = service.buscarPorId(cliente.getId());
 
@@ -116,6 +144,7 @@ public class ClienteServiceTest {
         assertEquals(cliente.getTelefone(), resposta.telefone());
 
         verify(repository).findById(cliente.getId());
+        verify(mapper).toResponse(cliente);
     }
 
     @Test
@@ -141,6 +170,12 @@ public class ClienteServiceTest {
             "kelwin.novo@email.com",
             "88888-8888"
         );
+        ClienteResponse response = new ClienteResponse(
+            1L,
+            request.nome(),
+            request.email(),
+            request.telefone()
+        );
 
 
         when(repository.findById(cliente.getId()))
@@ -152,6 +187,9 @@ public class ClienteServiceTest {
         when(repository.save(any(Cliente.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
 
+        when(mapper.toResponse(cliente))
+            .thenReturn(response);
+
 
         ClienteResponse resposta = service.atualizarCliente(cliente.getId(), request);
 
@@ -162,6 +200,7 @@ public class ClienteServiceTest {
         verify(repository).findById(cliente.getId());
         verify(repository).existsByEmail(request.email());
         verify(repository).save(any(Cliente.class));
+        verify(mapper).toResponse(cliente);
     }
 
     @Test
@@ -261,6 +300,15 @@ public class ClienteServiceTest {
 
     private ClienteRequest criarRequestPadrao() {
         return new ClienteRequest(
+            "Kelwin",
+            "kelwin@email.com",
+            "99999-9999"
+        );
+    }
+
+    private ClienteResponse criarResponsePadrao() {
+        return new ClienteResponse(
+            1L,
             "Kelwin",
             "kelwin@email.com",
             "99999-9999"
