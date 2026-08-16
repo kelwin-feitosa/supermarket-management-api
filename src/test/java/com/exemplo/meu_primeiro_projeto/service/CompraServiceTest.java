@@ -74,6 +74,14 @@ public class CompraServiceTest {
 
         CompraResponse response = criarCompraResponsePadrao();
 
+        ItemCompra itemCompra = new ItemCompra(
+            produto,
+            item.quantidade(),
+            item.precoCompra()
+        );
+
+        itemCompra.setId(1L);
+
         when(fornecedorRepository.findById(fornecedorId))
             .thenReturn(Optional.of(fornecedor));
 
@@ -81,7 +89,7 @@ public class CompraServiceTest {
             .thenReturn(Optional.of(produto));
 
         when(mapper.toItemEntity(item, produto))
-            .thenReturn(criarItemCompraPadrao());
+            .thenReturn(itemCompra);
 
         when(calculoPrecoService.calcularValorTotalCompra(any()))
             .thenReturn(valorTotalCompra);
