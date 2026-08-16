@@ -23,6 +23,7 @@ import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;
+import com.exemplo.meu_primeiro_projeto.mapper.CategoriaMapper;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.model.Produto;
 import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
@@ -33,6 +34,9 @@ public class CategoriaServiceTest {
     @Mock
     private CategoriaRepository repository;
 
+    @Mock
+    private CategoriaMapper mapper;
+
     @InjectMocks
     private CategoriaService service;
 
@@ -41,15 +45,21 @@ public class CategoriaServiceTest {
         
         CategoriaRequest request = criarRequestPadrao();
 
-        Categoria categoriaSalva = criarCategoriaPadrao();
+        Categoria categoria = criarCategoriaPadrao();
+
+        CategoriaResponse response = criarResponsePadrao();
 
         when(repository.existsByNome(request.nome()))
             .thenReturn(false);
 
+        when(mapper.toEntity(request))
+            .thenReturn(categoria);
+
         when(repository.save(any(Categoria.class)))
-            .thenReturn(categoriaSalva);
+            .thenReturn(categoria);
 
-
+        when(mapper.toResponse(categoria))
+            .thenReturn(response);
 
         CategoriaResponse resposta = service.criarCategoria(request);
 
@@ -60,7 +70,9 @@ public class CategoriaServiceTest {
 
 
         verify(repository).existsByNome(request.nome());
+        verify(mapper).toEntity(request);
         verify(repository).save(any(Categoria.class));
+        verify(mapper).toResponse(categoria);
     }
 
     @Test
@@ -91,10 +103,22 @@ public class CategoriaServiceTest {
         );
         categoria2.setId(2L);
 
+        CategoriaResponse response1 = criarResponsePadrao();
 
+        CategoriaResponse response2 = new CategoriaResponse(
+            2L,
+            "Limpeza",
+            "Produtos de limpeza"
+        );
 
         when(repository.findAll())
             .thenReturn(List.of(categoria1, categoria2));
+
+        when(mapper.toResponse(categoria1))
+            .thenReturn(response1);
+
+        when(mapper.toResponse(categoria2))
+            .thenReturn(response2);
 
 
         List<CategoriaResponse> resposta = service.listarCategorias();
@@ -109,14 +133,21 @@ public class CategoriaServiceTest {
 
 
         verify(repository).findAll();
+        verify(mapper).toResponse(categoria1);
+        verify(mapper).toResponse(categoria2);
     }
 
     @Test
     void buscarPorId_deveRetornarCategoriaQuandoExistir() {
         Categoria categoria = criarCategoriaPadrao();
 
+        CategoriaResponse response = criarResponsePadrao();
+
         when(repository.findById(categoria.getId()))
             .thenReturn(Optional.of(categoria));
+
+        when(mapper.toResponse(categoria))
+            .thenReturn(response);
 
         CategoriaResponse resposta = service.buscarPorId(categoria.getId());
 
@@ -125,6 +156,7 @@ public class CategoriaServiceTest {
         assertEquals(categoria.getDescricao(), resposta.descricao());
 
         verify(repository).findById(categoria.getId());
+        verify(mapper).toResponse(categoria);
     }
 
     @Test
@@ -151,6 +183,12 @@ public class CategoriaServiceTest {
 
         Categoria categoria = criarCategoriaPadrao();
 
+        CategoriaResponse response = new CategoriaResponse(
+            1L,
+            request.nome(),
+            request.descricao()
+        );
+
         when(repository.findById(1L))
             .thenReturn(Optional.of(categoria));
 
@@ -159,6 +197,9 @@ public class CategoriaServiceTest {
 
         when(repository.save(any(Categoria.class)))
             .thenReturn(categoria);
+        
+        when(mapper.toResponse(categoria))
+            .thenReturn(response);
 
         CategoriaResponse resposta = service.atualizarCategoria(categoria.getId(), request);
 
@@ -167,6 +208,7 @@ public class CategoriaServiceTest {
 
         verify(repository).findById(1L);
         verify(repository).save(any(Categoria.class));
+        verify(mapper).toResponse(categoria);
     }
 
     @Test
@@ -277,6 +319,14 @@ public class CategoriaServiceTest {
 
     private CategoriaRequest criarRequestPadrao() {
         return new CategoriaRequest(
+            "Bebidas",
+            "Produtos líquidos"
+        );
+    }
+
+    private CategoriaResponse criarResponsePadrao() {
+        return new CategoriaResponse(
+            1L,
             "Bebidas",
             "Produtos líquidos"
         );
