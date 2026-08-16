@@ -24,6 +24,7 @@ import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.CompraMapper;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.model.Compra;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
@@ -50,6 +51,9 @@ public class CompraServiceTest {
     @Mock
     CalculoPrecoService calculoPrecoService;
 
+    @Mock
+    CompraMapper mapper;
+
     @InjectMocks
     CompraService service;
 
@@ -67,17 +71,25 @@ public class CompraServiceTest {
 
         BigDecimal valorTotalCompra = item.precoCompra().multiply(BigDecimal.valueOf(item.quantidade()));
 
+        CompraResponse response = criarCompraResponsePadrao();
+
         when(fornecedorRepository.findById(fornecedorId))
             .thenReturn(Optional.of(fornecedor));
 
         when(produtoRepository.findById(produto.getId()))
             .thenReturn(Optional.of(produto));
 
+        when(mapper.toItemEntity(item, produto))
+            .thenReturn(criarItemCompraPadrao());
+
         when(calculoPrecoService.calcularValorTotalCompra(any()))
             .thenReturn(valorTotalCompra);
 
         when(compraRepository.save(any(Compra.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
+
+        when(mapper.toResponse(any(Compra.class)))
+            .thenReturn(response);
 
         CompraResponse resposta = service.realizarCompra(request);
 
@@ -90,6 +102,8 @@ public class CompraServiceTest {
         verify(calculoPrecoService).calcularValorTotalCompra(any());
         verify(compraRepository).save(any(Compra.class));
         verify(estoqueService).aumentarEstoque(eq(produto), eq(item.quantidade()));
+        verify(mapper).toItemEntity(item, produto);
+        verify(mapper).toResponse(any(Compra.class));
     }
 
     @Test
@@ -147,8 +161,13 @@ public class CompraServiceTest {
 
         Long compraId = compra.getId();
 
+        CompraResponse response = criarCompraResponsePadrao();
+
         when(compraRepository.findById(compraId))
             .thenReturn(Optional.of(compra));
+
+        when(mapper.toResponse(compra))
+            .thenReturn(response);
 
         CompraResponse resposta = service.buscarCompra(compraId);
 
@@ -158,6 +177,7 @@ public class CompraServiceTest {
         assertEquals(compra.getItens().size(), resposta.itens().size());
 
         verify(compraRepository).findById(compraId);
+        verify(mapper).toResponse(compra);
     }
 
     @Test
@@ -184,8 +204,24 @@ public class CompraServiceTest {
         Compra compra2 = criarCompraPadrao();
         compra2.setId(2L);
 
+        CompraResponse response1 = criarCompraResponsePadrao();
+
+        CompraResponse response2 = new CompraResponse(
+            2L,
+            compra2.getFornecedor().getId(),
+            compra2.getDataCompra(),
+            compra2.getValorTotal(),
+            List.of()
+        );
+
         when(compraRepository.findAll())
             .thenReturn(List.of(compra1, compra2));
+
+        when(mapper.toResponse(compra1))
+            .thenReturn(response1);
+
+        when(mapper.toResponse(compra2))
+            .thenReturn(response2);
 
         List<CompraResponse> resposta = service.listarCompras();
 
@@ -195,6 +231,8 @@ public class CompraServiceTest {
         assertEquals(compra2.getId(), resposta.get(1).id());
 
         verify(compraRepository).findAll();
+        verify(mapper).toResponse(compra1);
+        verify(mapper).toResponse(compra2);
     }
 
     private Fornecedor criarFornecedorPadrao() {
@@ -280,5 +318,17 @@ public class CompraServiceTest {
         compra.setValorTotal(item.getSubtotal());
 
         return compra;
+    }
+
+    private CompraResponse criarCompraResponsePadrao() {
+        Compra compra = criarCompraPadrao();
+
+        return new CompraResponse(
+            compra.getId(),
+            compra.getFornecedor().getId(),
+            compra.getDataCompra(),
+            compra.getValorTotal(),
+            List.of()
+        );
     }
 }
