@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exemplo.meu_primeiro_projeto.dto.response.ItemVendaResponse;
 import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
@@ -182,19 +183,28 @@ public class VendaServiceTest {
 
     @Test
     void listarVendas_deveRetornarLista() {
-         Venda venda1 = criarVendaPadrao();
-
+        Venda venda1 = criarVendaPadrao();
         Venda venda2 = criarVendaPadrao();
         venda2.setId(2L);
 
         VendaResponse response1 = criarVendaResponsePadrao();
 
+        ItemVenda item2 = venda2.getItens().getFirst();
+        ItemVendaResponse itemResponse2 = new ItemVendaResponse(
+            item2.getId(),
+            item2.getProduto().getId(),
+            item2.getProduto().getNome(),
+            item2.getQuantidade(),
+            item2.getPrecoUnitario(),
+            item2.getSubtotal()
+        );
+
         VendaResponse response2 = new VendaResponse(
-            2L,
+            venda2.getId(),
             venda2.getCliente().getId(),
             venda2.getDataVenda(),
             venda2.getValorTotal(),
-            List.of()
+            List.of(itemResponse2)
         );
 
         when(vendaRepository.findAll())
@@ -313,13 +323,23 @@ public class VendaServiceTest {
 
     private VendaResponse criarVendaResponsePadrao() {
         Venda venda = criarVendaPadrao();
+        ItemVenda item = venda.getItens().getFirst();
+
+        ItemVendaResponse itemResponse = new ItemVendaResponse(
+            item.getId(),
+            item.getProduto().getId(),
+            item.getProduto().getNome(),
+            item.getQuantidade(),
+            item.getPrecoUnitario(),
+            item.getSubtotal()
+        );
 
         return new VendaResponse(
             venda.getId(),
             venda.getCliente().getId(),
             venda.getDataVenda(),
             venda.getValorTotal(),
-            List.of()
+            List.of(itemResponse)
         );
     }
 }

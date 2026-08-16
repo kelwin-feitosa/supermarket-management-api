@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.request.ItemCompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
+import com.exemplo.meu_primeiro_projeto.dto.response.ItemCompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
@@ -206,12 +207,23 @@ public class CompraServiceTest {
 
         CompraResponse response1 = criarCompraResponsePadrao();
 
+        ItemCompra item2 = compra2.getItens().getFirst();
+
+        ItemCompraResponse itemResponse2 = new ItemCompraResponse(
+            item2.getId(),
+            item2.getProduto().getId(),
+            item2.getProduto().getNome(),
+            item2.getQuantidade(),
+            item2.getPrecoCompra(),
+            item2.getSubtotal()
+        );
+
         CompraResponse response2 = new CompraResponse(
-            2L,
+            compra2.getId(),
             compra2.getFornecedor().getId(),
             compra2.getDataCompra(),
             compra2.getValorTotal(),
-            List.of()
+            List.of(itemResponse2)
         );
 
         when(compraRepository.findAll())
@@ -322,13 +334,23 @@ public class CompraServiceTest {
 
     private CompraResponse criarCompraResponsePadrao() {
         Compra compra = criarCompraPadrao();
+        ItemCompra item = compra.getItens().getFirst();
+
+        ItemCompraResponse itemResponse = new ItemCompraResponse(
+            item.getId(),
+            item.getProduto().getId(),
+            item.getProduto().getNome(),
+            item.getQuantidade(),
+            item.getPrecoCompra(),
+            item.getSubtotal()
+        );
 
         return new CompraResponse(
             compra.getId(),
             compra.getFornecedor().getId(),
             compra.getDataCompra(),
             compra.getValorTotal(),
-            List.of()
+            List.of(itemResponse)
         );
     }
 }

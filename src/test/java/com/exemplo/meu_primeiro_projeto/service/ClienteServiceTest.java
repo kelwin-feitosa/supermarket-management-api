@@ -85,6 +85,7 @@ public class ClienteServiceTest {
     @Test
     void listarClientes_deveRetornarLista() {
         Cliente cliente1 = criarClientePadrao();
+
         Cliente cliente2 = new Cliente(
             "Maria",
             "maria@email.com",
@@ -96,10 +97,13 @@ public class ClienteServiceTest {
 
         ClienteResponse response2 = new ClienteResponse(
             2L,
-            "Maria",
-            "maria@email.com",
-            "99999-9999"
+            cliente2.getNome(),
+            cliente2.getEmail(),
+            cliente2.getTelefone()
         );
+
+        when(repository.findAll())
+            .thenReturn(List.of(cliente1, cliente2));
 
         when(mapper.toResponse(cliente1))
             .thenReturn(response1);
@@ -107,9 +111,7 @@ public class ClienteServiceTest {
         when(mapper.toResponse(cliente2))
             .thenReturn(response2);
 
-
         List<ClienteResponse> resposta = service.listarClientes();
-
 
         assertEquals(2, resposta.size());
 
@@ -121,6 +123,7 @@ public class ClienteServiceTest {
         assertEquals(cliente2.getEmail(), resposta.get(1).email());
         assertEquals(cliente2.getTelefone(), resposta.get(1).telefone());
 
+        verify(repository).findAll();
         verify(mapper).toResponse(cliente1);
         verify(mapper).toResponse(cliente2);
     }
@@ -307,11 +310,13 @@ public class ClienteServiceTest {
     }
 
     private ClienteResponse criarResponsePadrao() {
+        Cliente cliente = criarClientePadrao();
+
         return new ClienteResponse(
-            1L,
-            "Kelwin",
-            "kelwin@email.com",
-            "99999-9999"
+            cliente.getId(),
+            cliente.getNome(),
+            cliente.getEmail(),
+            cliente.getTelefone()
         );
     }
 }
