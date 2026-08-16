@@ -24,6 +24,7 @@ import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
 import com.exemplo.meu_primeiro_projeto.exception.VendaNaoEncontradaException;
+import com.exemplo.meu_primeiro_projeto.mapper.VendaMapper;
 import com.exemplo.meu_primeiro_projeto.model.Carrinho;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
@@ -49,17 +50,20 @@ public class VendaServiceTest {
     @Mock
     CalculoPrecoService calculoPrecoService;
 
+    @Mock
+    VendaMapper mapper;
+
     @InjectMocks
     VendaService service;
 
 
     @Test
     void realizarVenda_deveCriarVendaComSucesso() {
-        Produto produto = criarProdutoPadrao();
-
-        BigDecimal precoTotalVenda = produto.getPreco().multiply(BigDecimal.valueOf(2));
-
         Carrinho carrinho = criarCarrinhoPadrao();
+
+        BigDecimal precoTotalVenda = carrinho.getItens().getFirst().getSubtotal();
+
+        VendaResponse response = criarVendaResponsePadrao();
 
         when(carrinhoRepository.findById(carrinho.getId()))
             .thenReturn(Optional.of(carrinho));
@@ -72,6 +76,9 @@ public class VendaServiceTest {
 
         when(carrinhoRepository.save(any(Carrinho.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
+
+        when(mapper.toResponse(any(Venda.class)))
+            .thenReturn(response);
 
         int quantidadeItens = carrinho.getItens().size();
 
@@ -88,6 +95,7 @@ public class VendaServiceTest {
         verify(vendaRepository).save(any(Venda.class));
         verify(carrinhoRepository).save(any(Carrinho.class));
         verify(estoqueService).baixarEstoque(any(Produto.class), eq(2));
+        verify(mapper).toResponse(any(Venda.class));
     }
 
     @Test
@@ -136,9 +144,13 @@ public class VendaServiceTest {
     @Test
     void buscarVenda_deveRetornarVendaQuandoExistir() {
         Venda venda = criarVendaPadrao();
-        
+        VendaResponse response = criarVendaResponsePadrao();
+
         when(vendaRepository.findById(venda.getId()))
             .thenReturn(Optional.of(venda));
+
+        when(mapper.toResponse(venda))
+            .thenReturn(response);
 
         VendaResponse resposta = service.buscarVenda(venda.getId());
 
@@ -148,6 +160,7 @@ public class VendaServiceTest {
         assertEquals(venda.getItens().size(), resposta.itens().size());
 
         verify(vendaRepository).findById(venda.getId());
+        verify(mapper).toResponse(venda);
     }
 
     @Test
@@ -174,8 +187,24 @@ public class VendaServiceTest {
         Venda venda2 = criarVendaPadrao();
         venda2.setId(2L);
 
+        VendaResponse response1 = criarVendaResponsePadrao();
+
+        VendaResponse response2 = new VendaResponse(
+            2L,
+            venda2.getCliente().getId(),
+            venda2.getDataVenda(),
+            venda2.getValorTotal(),
+            List.of()
+        );
+
         when(vendaRepository.findAll())
             .thenReturn(List.of(venda1, venda2));
+
+        when(mapper.toResponse(venda1))
+            .thenReturn(response1);
+
+        when(mapper.toResponse(venda2))
+            .thenReturn(response2);
 
         List<VendaResponse> resposta = service.listarVendas();
 
@@ -185,6 +214,8 @@ public class VendaServiceTest {
         assertEquals(venda2.getId(), resposta.get(1).id());
 
         verify(vendaRepository).findAll();
+        verify(mapper).toResponse(venda1);
+        verify(mapper).toResponse(venda2);
     }
 
 
@@ -278,5 +309,17 @@ public class VendaServiceTest {
         item.setId(1L);
 
         return item;
+    }
+
+    private VendaResponse criarVendaResponsePadrao() {
+        Venda venda = criarVendaPadrao();
+
+        return new VendaResponse(
+            venda.getId(),
+            venda.getCliente().getId(),
+            venda.getDataVenda(),
+            venda.getValorTotal(),
+            List.of()
+        );
     }
 }
