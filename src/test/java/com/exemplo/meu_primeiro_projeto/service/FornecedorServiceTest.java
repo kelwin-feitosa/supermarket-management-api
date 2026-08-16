@@ -20,6 +20,7 @@ import com.exemplo.meu_primeiro_projeto.dto.request.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
 import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.mapper.FornecedorMapper;
 import com.exemplo.meu_primeiro_projeto.model.Compra;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
@@ -30,6 +31,9 @@ public class FornecedorServiceTest {
     @Mock
     private FornecedorRepository repository;
 
+    @Mock
+    private FornecedorMapper mapper;
+
     @InjectMocks
     private FornecedorService service;
 
@@ -37,13 +41,20 @@ public class FornecedorServiceTest {
     void criarFornecedor_deveCriarComSucesso() {
         FornecedorRequest request = criarRequestPadrao();
         Fornecedor fornecedor = criarFornecedorPadrao();
+        FornecedorResponse response = criarFornecedorResponsePadrao();
 
 
         when(repository.existsByCnpj(request.cnpj()))
             .thenReturn(false);
 
+        when(mapper.toEntity(request))
+            .thenReturn(fornecedor);
+
         when(repository.save(any(Fornecedor.class)))
             .thenReturn(fornecedor);
+
+        when(mapper.toResponse(fornecedor))
+            .thenReturn(response);
 
 
         FornecedorResponse resposta = service.criarFornecedor(request);
@@ -55,9 +66,11 @@ public class FornecedorServiceTest {
 
 
         verify(repository).existsByCnpj(request.cnpj());
+        verify(mapper).toEntity(request);
         verify(repository).save(any(Fornecedor.class));
+        verify(mapper).toResponse(fornecedor);
     }
-
+    
     @Test
     void criarFornecedor_deveLancarExcecaoQuandoCnpjJaExiste() {
         FornecedorRequest request = criarRequestPadrao();
@@ -85,12 +98,25 @@ public class FornecedorServiceTest {
             "98765432100000",
             "88888-8888"
         );
-
         fornecedor2.setId(2L);
 
+        FornecedorResponse response1 = criarFornecedorResponsePadrao();
+
+        FornecedorResponse response2 = new FornecedorResponse(
+            2L,
+            fornecedor2.getNome(),
+            fornecedor2.getCnpj(),
+            fornecedor2.getTelefone()
+        );
 
         when(repository.findAll())
             .thenReturn(List.of(fornecedor1, fornecedor2));
+
+        when(mapper.toResponse(fornecedor1))
+            .thenReturn(response1);
+
+        when(mapper.toResponse(fornecedor2))
+            .thenReturn(response2);
 
 
         List<FornecedorResponse> resposta = service.listarFornecedores();
@@ -108,15 +134,20 @@ public class FornecedorServiceTest {
 
 
         verify(repository).findAll();
+        verify(mapper).toResponse(fornecedor1);
+        verify(mapper).toResponse(fornecedor2);
     }
 
     @Test
     void listarFornecedoresAtivos_deveRetornarLista() {
         Fornecedor fornecedor = criarFornecedorPadrao();
-
+        FornecedorResponse response = criarFornecedorResponsePadrao();
 
         when(repository.findByAtivoTrue())
             .thenReturn(List.of(fornecedor));
+
+        when(mapper.toResponse(fornecedor))
+            .thenReturn(response);
 
 
         List<FornecedorResponse> resposta = service.listarFornecedoresAtivos();
@@ -129,15 +160,19 @@ public class FornecedorServiceTest {
 
 
         verify(repository).findByAtivoTrue();
+        verify(mapper).toResponse(fornecedor);
     }
 
     @Test
     void buscarPorId_deveRetornarFornecedorQuandoExistir() {
         Fornecedor fornecedor = criarFornecedorPadrao();
-
+        FornecedorResponse response = criarFornecedorResponsePadrao();
 
         when(repository.findById(fornecedor.getId()))
             .thenReturn(Optional.of(fornecedor));
+
+        when(mapper.toResponse(fornecedor))
+            .thenReturn(response);
 
 
         FornecedorResponse resposta = service.buscarPorId(fornecedor.getId());
@@ -150,6 +185,7 @@ public class FornecedorServiceTest {
 
 
         verify(repository).findById(fornecedor.getId());
+        verify(mapper).toResponse(fornecedor);
     }
 
     @Test
@@ -180,17 +216,25 @@ public class FornecedorServiceTest {
             "99999-9999"
         );
 
+        FornecedorResponse response = new FornecedorResponse(
+            fornecedor.getId(),
+            request.nome(),
+            request.cnpj(),
+            request.telefone()
+        );
+
 
         when(repository.findById(fornecedor.getId()))
             .thenReturn(Optional.of(fornecedor));
 
-
         when(repository.existsByCnpj(request.cnpj()))
             .thenReturn(false);
 
-
         when(repository.save(any(Fornecedor.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
+
+        when(mapper.toResponse(fornecedor))
+            .thenReturn(response);
 
 
         FornecedorResponse resposta = service.atualizarFornecedor(
@@ -207,6 +251,7 @@ public class FornecedorServiceTest {
         verify(repository).findById(fornecedor.getId());
         verify(repository).existsByCnpj(request.cnpj());
         verify(repository).save(any(Fornecedor.class));
+        verify(mapper).toResponse(fornecedor);
     }
 
     @Test
@@ -336,6 +381,17 @@ public class FornecedorServiceTest {
             "Ambev",
             "12345678000100",
             "77777-7777"
+        );
+    }
+
+    private FornecedorResponse criarFornecedorResponsePadrao() {
+        Fornecedor fornecedor = criarFornecedorPadrao();
+
+        return new FornecedorResponse(
+            fornecedor.getId(),
+            fornecedor.getNome(),
+            fornecedor.getCnpj(),
+            fornecedor.getTelefone()
         );
     }
 }
