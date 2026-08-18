@@ -14,10 +14,17 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.CompraFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.request.ItemCompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
@@ -54,6 +61,9 @@ public class CompraServiceTest {
 
     @Mock
     CompraMapper mapper;
+
+    @Mock
+    CompraFiltro filtro;
 
     @InjectMocks
     CompraService service;
@@ -206,7 +216,7 @@ public class CompraServiceTest {
     }
 
     @Test
-    void listarCompras_deveRetornarLista() {
+    void listarCompras_deveRetornarPagina() {
 
         Compra compra1 = criarCompraPadrao();
 
@@ -234,8 +244,18 @@ public class CompraServiceTest {
             List.of(itemResponse2)
         );
 
-        when(compraRepository.findAll())
-            .thenReturn(List.of(compra1, compra2));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Compra> pagina = new PageImpl<>(
+            List.of(compra1, compra2),
+            pageable,
+            2
+        );
+
+        when(compraRepository.findAll(
+            ArgumentMatchers.<Specification<Compra>>any(),
+            eq(pageable)
+        )).thenReturn(pagina);
 
         when(mapper.toResponse(compra1))
             .thenReturn(response1);
@@ -243,14 +263,21 @@ public class CompraServiceTest {
         when(mapper.toResponse(compra2))
             .thenReturn(response2);
 
-        List<CompraResponse> resposta = service.listarCompras();
+        Page<CompraResponse> resposta = service.listarCompras(filtro, pageable);
 
-        assertEquals(2, resposta.size());
+        assertEquals(2, resposta.getContent().size());
 
-        assertEquals(compra1.getId(), resposta.get(0).id());
-        assertEquals(compra2.getId(), resposta.get(1).id());
+        assertEquals(2, resposta.getTotalElements());
+        assertEquals(1, resposta.getTotalPages());
 
-        verify(compraRepository).findAll();
+        assertEquals(compra1.getId(), resposta.getContent().get(0).id());
+        assertEquals(compra2.getId(), resposta.getContent().get(1).id());
+
+        verify(compraRepository).findAll(
+            ArgumentMatchers.<Specification<Compra>>any(),
+            eq(pageable)
+        );
+
         verify(mapper).toResponse(compra1);
         verify(mapper).toResponse(compra2);
     }
