@@ -3,6 +3,7 @@ package com.exemplo.meu_primeiro_projeto.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,10 +13,17 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.FornecedorFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
@@ -33,6 +41,9 @@ public class FornecedorServiceTest {
 
     @Mock
     private FornecedorMapper mapper;
+
+    @Mock
+    private FornecedorFiltro filtro;
 
     @InjectMocks
     private FornecedorService service;
@@ -90,7 +101,7 @@ public class FornecedorServiceTest {
     }
 
     @Test
-    void listarFornecedores_deveRetornarLista() {
+    void listarFornecedores_deveRetornarPagina() {
         Fornecedor fornecedor1 = criarFornecedorPadrao();
 
         Fornecedor fornecedor2 = new Fornecedor(
@@ -109,8 +120,18 @@ public class FornecedorServiceTest {
             fornecedor2.getTelefone()
         );
 
-        when(repository.findAll())
-            .thenReturn(List.of(fornecedor1, fornecedor2));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Fornecedor> pagina = new PageImpl<>(
+            List.of(fornecedor1, fornecedor2),
+            pageable,
+            2
+        );
+
+        when(repository.findAll(
+            ArgumentMatchers.<Specification<Fornecedor>>any(),
+            eq(pageable)
+        )).thenReturn(pagina);
 
         when(mapper.toResponse(fornecedor1))
             .thenReturn(response1);
@@ -118,49 +139,29 @@ public class FornecedorServiceTest {
         when(mapper.toResponse(fornecedor2))
             .thenReturn(response2);
 
+        Page<FornecedorResponse> resposta =
+            service.listarFornecedores(filtro, pageable);
 
-        List<FornecedorResponse> resposta = service.listarFornecedores();
+        assertEquals(2, resposta.getContent().size());
 
+        assertEquals(2, resposta.getTotalElements());
+        assertEquals(1, resposta.getTotalPages());
 
-        assertEquals(2, resposta.size());
+        assertEquals(fornecedor1.getNome(), resposta.getContent().get(0).nome());
+        assertEquals(fornecedor1.getCnpj(), resposta.getContent().get(0).cnpj());
+        assertEquals(fornecedor1.getTelefone(), resposta.getContent().get(0).telefone());
 
-        assertEquals(fornecedor1.getNome(), resposta.get(0).nome());
-        assertEquals(fornecedor1.getCnpj(), resposta.get(0).cnpj());
-        assertEquals(fornecedor1.getTelefone(), resposta.get(0).telefone());
+        assertEquals(fornecedor2.getNome(), resposta.getContent().get(1).nome());
+        assertEquals(fornecedor2.getCnpj(), resposta.getContent().get(1).cnpj());
+        assertEquals(fornecedor2.getTelefone(), resposta.getContent().get(1).telefone());
 
-        assertEquals(fornecedor2.getNome(), resposta.get(1).nome());
-        assertEquals(fornecedor2.getCnpj(), resposta.get(1).cnpj());
-        assertEquals(fornecedor2.getTelefone(), resposta.get(1).telefone());
+        verify(repository).findAll(
+            ArgumentMatchers.<Specification<Fornecedor>>any(),
+            eq(pageable)
+        );
 
-
-        verify(repository).findAll();
         verify(mapper).toResponse(fornecedor1);
         verify(mapper).toResponse(fornecedor2);
-    }
-
-    @Test
-    void listarFornecedoresAtivos_deveRetornarLista() {
-        Fornecedor fornecedor = criarFornecedorPadrao();
-        FornecedorResponse response = criarFornecedorResponsePadrao();
-
-        when(repository.findByAtivoTrue())
-            .thenReturn(List.of(fornecedor));
-
-        when(mapper.toResponse(fornecedor))
-            .thenReturn(response);
-
-
-        List<FornecedorResponse> resposta = service.listarFornecedoresAtivos();
-
-
-        assertEquals(1, resposta.size());
-
-        assertEquals(fornecedor.getNome(), resposta.get(0).nome());
-        assertEquals(fornecedor.getCnpj(), resposta.get(0).cnpj());
-
-
-        verify(repository).findByAtivoTrue();
-        verify(mapper).toResponse(fornecedor);
     }
 
     @Test
