@@ -11,7 +11,7 @@ public class VendaSpecification {
 
     public static Specification<Venda> clienteIgual(Long clienteId) {
         if (clienteId == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -23,7 +23,7 @@ public class VendaSpecification {
 
     public static Specification<Venda> dataVendaMaiorOuIgual(LocalDate dataInicio) {
         if (dataInicio == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -35,7 +35,7 @@ public class VendaSpecification {
 
     public static Specification<Venda> dataVendaMenorOuIgual(LocalDate dataFim) {
         if (dataFim == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
