@@ -1,7 +1,8 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.ClienteFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
@@ -42,7 +44,7 @@ public class ClienteController {
 
     @Operation(
         summary = "Listar clientes",
-        description = "Lista todos os clientes cadastrados no sistema."
+        description = "Lista os clientes cadastrados no sistema, permitindo filtragem e paginação."
     )
     @ApiResponses({
         @ApiResponse(
@@ -51,8 +53,11 @@ public class ClienteController {
         )
     })
     @GetMapping
-    public ResponseEntity<List<ClienteResponse>> listarClientes() {
-        return ResponseEntity.ok(service.listarClientes());
+    public ResponseEntity<Page<ClienteResponse>> listarClientes(
+            ClienteFiltro filtro,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+
+        return ResponseEntity.ok(service.listarClientes(filtro, pageable));
     }
 
     @Operation(
