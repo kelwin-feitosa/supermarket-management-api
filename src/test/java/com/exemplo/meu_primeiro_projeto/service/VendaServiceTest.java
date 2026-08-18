@@ -16,10 +16,17 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.VendaFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.response.ItemVendaResponse;
 import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
@@ -53,6 +60,9 @@ public class VendaServiceTest {
 
     @Mock
     VendaMapper mapper;
+
+    @Mock
+    VendaFiltro filtro;
 
     @InjectMocks
     VendaService service;
@@ -182,14 +192,16 @@ public class VendaServiceTest {
 
 
     @Test
-    void listarVendas_deveRetornarLista() {
+    void listarVendas_deveRetornarPagina() {
         Venda venda1 = criarVendaPadrao();
+
         Venda venda2 = criarVendaPadrao();
         venda2.setId(2L);
 
         VendaResponse response1 = criarVendaResponsePadrao();
 
         ItemVenda item2 = venda2.getItens().getFirst();
+
         ItemVendaResponse itemResponse2 = new ItemVendaResponse(
             item2.getId(),
             item2.getProduto().getId(),
@@ -207,8 +219,18 @@ public class VendaServiceTest {
             List.of(itemResponse2)
         );
 
-        when(vendaRepository.findAll())
-            .thenReturn(List.of(venda1, venda2));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Venda> pagina = new PageImpl<>(
+            List.of(venda1, venda2),
+            pageable,
+            2
+        );
+
+        when(vendaRepository.findAll(
+            ArgumentMatchers.<Specification<Venda>>any(),
+            eq(pageable)
+        )).thenReturn(pagina);
 
         when(mapper.toResponse(venda1))
             .thenReturn(response1);
@@ -216,14 +238,22 @@ public class VendaServiceTest {
         when(mapper.toResponse(venda2))
             .thenReturn(response2);
 
-        List<VendaResponse> resposta = service.listarVendas();
+        Page<VendaResponse> resposta =
+            service.listarVendas(filtro, pageable);
 
-        assertEquals(2, resposta.size());
+        assertEquals(2, resposta.getContent().size());
 
-        assertEquals(venda1.getId(), resposta.get(0).id());
-        assertEquals(venda2.getId(), resposta.get(1).id());
+        assertEquals(2, resposta.getTotalElements());
+        assertEquals(1, resposta.getTotalPages());
 
-        verify(vendaRepository).findAll();
+        assertEquals(venda1.getId(), resposta.getContent().get(0).id());
+        assertEquals(venda2.getId(), resposta.getContent().get(1).id());
+
+        verify(vendaRepository).findAll(
+            ArgumentMatchers.<Specification<Venda>>any(),
+            eq(pageable)
+        );
+
         verify(mapper).toResponse(venda1);
         verify(mapper).toResponse(venda2);
     }
