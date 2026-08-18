@@ -1,7 +1,8 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.CompraFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
@@ -106,7 +108,10 @@ public class CompraController {
         )
     })
     @GetMapping
-    public ResponseEntity<List<CompraResponse>> listarCompras() {
-        return ResponseEntity.ok(compraService.listarCompras());
+    public ResponseEntity<Page<CompraResponse>> listarCompras(
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable,
+            CompraFiltro filtro) {
+
+        return ResponseEntity.ok(compraService.listarCompras(filtro, pageable));
     }
 }
