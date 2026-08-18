@@ -1,9 +1,10 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.ClienteFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
@@ -11,6 +12,7 @@ import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.mapper.ClienteMapper;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
 import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
+import com.exemplo.meu_primeiro_projeto.repository.specification.ClienteSpecification;
 
 @Service    
 public class ClienteService {
@@ -23,12 +25,10 @@ public class ClienteService {
         this.mapper = mapper;
     }
 
-    public List<ClienteResponse> listarClientes() {
-        return repository.findAll()
-                    .stream()
-                    .map(mapper::toResponse)
-                    .toList();
-    }
+    public Page<ClienteResponse> listarClientes(ClienteFiltro filtro, Pageable pageable) {
+        return repository.findAll(ClienteSpecification.comFiltro(filtro), pageable)
+                        .map(mapper::toResponse);
+        }
 
     public ClienteResponse buscarPorId(Long id) {
         return mapper.toResponse(buscarEntidade(id));
