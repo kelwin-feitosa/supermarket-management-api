@@ -2,11 +2,15 @@ package com.exemplo.meu_primeiro_projeto.service;
 
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ProdutoRepository;
+import com.exemplo.meu_primeiro_projeto.repository.specification.CompraSpecification;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.CompraFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.CompraRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CompraResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
@@ -70,10 +74,9 @@ public class CompraService {
         return mapper.toResponse(compra);
     }
 
-    public List<CompraResponse> listarCompras() {
-        return compraRepository.findAll().stream()
-                .map(mapper::toResponse)
-                .toList();
+    public Page<CompraResponse> listarCompras(CompraFiltro filtro, Pageable pageable) {
+        return compraRepository.findAll(CompraSpecification.comFiltro(filtro), pageable)
+                .map(mapper::toResponse);
     }
 
     private Compra verificarCompra(Long idCompra) {
