@@ -9,7 +9,7 @@ public class ClienteSpecification {
 
     public static Specification<Cliente> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -21,7 +21,7 @@ public class ClienteSpecification {
 
     public static Specification<Cliente> emailContem(String email) {
         if (email == null || email.isBlank()) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
