@@ -11,13 +11,21 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.CategoriaFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.CategoriaRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
@@ -36,6 +44,9 @@ public class CategoriaServiceTest {
 
     @Mock
     private CategoriaMapper mapper;
+
+    @Mock
+    private CategoriaFiltro filtro;
 
     @InjectMocks
     private CategoriaService service;
@@ -94,7 +105,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void listarCategorias_deveRetornarLista() {
+    void listarCategorias_deveRetornarPagina() {
         Categoria categoria1 = criarCategoriaPadrao();
 
         Categoria categoria2 = new Categoria(
@@ -111,28 +122,44 @@ public class CategoriaServiceTest {
             "Produtos de limpeza"
         );
 
-        when(repository.findAll())
-            .thenReturn(List.of(categoria1, categoria2));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Categoria> pagina = new PageImpl<>(
+            List.of(categoria1, categoria2),
+            pageable,
+            2
+        );
+
+        when(repository.findAll(
+            ArgumentMatchers.<Specification<Categoria>>any(),
+            eq(pageable)
+        )).thenReturn(pagina);
 
         when(mapper.toResponse(categoria1))
             .thenReturn(response1);
 
         when(mapper.toResponse(categoria2))
             .thenReturn(response2);
+        
 
+        Page<CategoriaResponse> resposta = service.listarCategorias(filtro, pageable);
 
-        List<CategoriaResponse> resposta = service.listarCategorias();
+        assertEquals(2, resposta.getContent().size());
 
-        assertEquals(2, resposta.size());
+        assertEquals(2, resposta.getTotalElements());
+        assertEquals(1, resposta.getTotalPages());
 
-        assertEquals(categoria1.getNome(), resposta.get(0).nome());
-        assertEquals(categoria1.getDescricao(), resposta.get(0).descricao());
+        assertEquals(categoria1.getNome(), resposta.getContent().get(0).nome());
+        assertEquals(categoria1.getDescricao(), resposta.getContent().get(0).descricao());
 
-        assertEquals(categoria2.getNome(), resposta.get(1).nome());
-        assertEquals(categoria2.getDescricao(), resposta.get(1).descricao());
+        assertEquals(categoria2.getNome(), resposta.getContent().get(1).nome());
+        assertEquals(categoria2.getDescricao(), resposta.getContent().get(1).descricao());
 
-
-        verify(repository).findAll();
+        
+        verify(repository).findAll(
+            ArgumentMatchers.<Specification<Categoria>>any(),
+            eq(pageable)
+        );
         verify(mapper).toResponse(categoria1);
         verify(mapper).toResponse(categoria2);
     }
