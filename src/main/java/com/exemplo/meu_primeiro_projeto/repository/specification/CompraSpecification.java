@@ -11,7 +11,7 @@ public class CompraSpecification {
 
     public static Specification<Compra> fornecedorIgual(Long idFornecedor) {
         if (idFornecedor == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -23,7 +23,7 @@ public class CompraSpecification {
 
     public static Specification<Compra> dataCompraMaiorOuIgual(LocalDate dataInicio) {
         if (dataInicio == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -35,7 +35,7 @@ public class CompraSpecification {
 
     public static Specification<Compra> dataCompraMenorOuIgual(LocalDate dataFim) {
         if (dataFim == null) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
