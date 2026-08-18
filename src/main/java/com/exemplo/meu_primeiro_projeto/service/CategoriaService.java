@@ -1,9 +1,10 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.CategoriaFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.CategoriaRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
@@ -12,6 +13,7 @@ import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaExceptio
 import com.exemplo.meu_primeiro_projeto.mapper.CategoriaMapper;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
+import com.exemplo.meu_primeiro_projeto.repository.specification.CategoriaSpecification;
 
 @Service
 public class CategoriaService {
@@ -23,11 +25,9 @@ public class CategoriaService {
         this.mapper = mapper;
     }
 
-    public List<CategoriaResponse> listarCategorias() {
-        return repository.findAll()
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+    public Page<CategoriaResponse> listarCategorias(CategoriaFiltro filtro, Pageable pageable) {
+        return repository.findAll(CategoriaSpecification.comFiltro(filtro), pageable)
+                            .map(mapper::toResponse);
     }
 
     public CategoriaResponse criarCategoria(CategoriaRequest request) {
