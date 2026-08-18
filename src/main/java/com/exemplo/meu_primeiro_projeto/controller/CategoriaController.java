@@ -1,7 +1,8 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.CategoriaFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.CategoriaRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.CategoriaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
@@ -43,14 +45,20 @@ public class CategoriaController {
     
     @Operation(
         summary = "Listar categorias",
-        description = "Lista todas as categorias cadastradas no sistema."
+        description = "Lista as categorias cadastradas no sistema, permitindo filtragem e paginação."
     )
     @ApiResponses(
-        @ApiResponse(responseCode = "200", description = "Categorias listadas com sucesso")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Categorias listadas com sucesso"
+        )
     )
     @GetMapping
-    public ResponseEntity<List<CategoriaResponse>> listarCategorias() {
-        return ResponseEntity.ok(service.listarCategorias());
+    public ResponseEntity<Page<CategoriaResponse>> listarCategorias(
+            CategoriaFiltro filtro,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+
+        return ResponseEntity.ok(service.listarCategorias(filtro, pageable));
     }
 
     @Operation(
