@@ -3,6 +3,7 @@ package com.exemplo.meu_primeiro_projeto.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,15 +13,23 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.ClienteFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.ClienteRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.mapper.ClienteMapper;
+import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
 import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
 
@@ -32,6 +41,9 @@ public class ClienteServiceTest {
 
     @Mock
     private ClienteMapper mapper;
+
+    @Mock
+    private ClienteFiltro filtro;
 
     @InjectMocks
     private ClienteService service;
@@ -83,7 +95,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void listarClientes_deveRetornarLista() {
+    void listarClientes_deveRetornarPagina() {
         Cliente cliente1 = criarClientePadrao();
 
         Cliente cliente2 = new Cliente(
@@ -102,8 +114,18 @@ public class ClienteServiceTest {
             cliente2.getTelefone()
         );
 
-        when(repository.findAll())
-            .thenReturn(List.of(cliente1, cliente2));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Cliente> pagina = new PageImpl<>(
+            List.of(cliente1, cliente2),
+            pageable,
+            2
+        );
+
+        when(repository.findAll(
+            ArgumentMatchers.<Specification<Cliente>>any(),
+            eq(pageable)
+        )).thenReturn(pagina);
 
         when(mapper.toResponse(cliente1))
             .thenReturn(response1);
@@ -111,19 +133,26 @@ public class ClienteServiceTest {
         when(mapper.toResponse(cliente2))
             .thenReturn(response2);
 
-        List<ClienteResponse> resposta = service.listarClientes();
+        Page<ClienteResponse> resposta = service.listarClientes(filtro, pageable);
 
-        assertEquals(2, resposta.size());
+        assertEquals(2, resposta.getContent().size());
 
-        assertEquals(cliente1.getNome(), resposta.get(0).nome());
-        assertEquals(cliente1.getEmail(), resposta.get(0).email());
-        assertEquals(cliente1.getTelefone(), resposta.get(0).telefone());
+        assertEquals(2, resposta.getTotalElements());
+        assertEquals(1, resposta.getTotalPages());
 
-        assertEquals(cliente2.getNome(), resposta.get(1).nome());
-        assertEquals(cliente2.getEmail(), resposta.get(1).email());
-        assertEquals(cliente2.getTelefone(), resposta.get(1).telefone());
+        assertEquals(cliente1.getNome(), resposta.getContent().get(0).nome());
+        assertEquals(cliente1.getEmail(), resposta.getContent().get(0).email());
+        assertEquals(cliente1.getTelefone(), resposta.getContent().get(0).telefone());
 
-        verify(repository).findAll();
+        assertEquals(cliente2.getNome(), resposta.getContent().get(1).nome());
+        assertEquals(cliente2.getEmail(), resposta.getContent().get(1).email());
+        assertEquals(cliente2.getTelefone(), resposta.getContent().get(1).telefone());
+
+        verify(repository).findAll(
+            ArgumentMatchers.<Specification<Cliente>>any(),
+            eq(pageable)
+        );
+
         verify(mapper).toResponse(cliente1);
         verify(mapper).toResponse(cliente2);
     }
