@@ -54,6 +54,14 @@ Durante o desenvolvimento foram aplicados conceitos importantes de desenvolvimen
 - Tratamento global de exceções.
 - Validação de dados.
 - Testes unitários com JUnit 5 e Mockito.
+- Paginação e ordenação com Spring Data.
+- Filtros dinâmicos utilizando JPA Specifications.
+- Consultas dinâmicas com Criteria API.
+- Testes de Specifications.
+- Paginação e ordenação com Spring Data.
+- Filtros dinâmicos utilizando JPA Specifications.
+- Consultas dinâmicas com Criteria API.
+- Composição de Specifications.
 
 ---
 
@@ -112,8 +120,38 @@ O sistema possui as seguintes entidades:
 - ✅ Validação de estoque disponível
 - ✅ Tratamento global de exceções
 - ✅ Documentação da API utilizando Swagger/OpenAPI
-- ✅ Testes unitários dos Services utilizando JUnit 5 e Mockito.
+- ✅ Testes unitários dos Services utilizando JUnit 5 e Mockito
+- ✅ Testes das Specifications utilizando JUnit 5
+- ✅ 64 testes automatizados
 - ✅ Validação das regras de negócio
+- ✅ Paginação das listagens utilizando Spring Data Pageable
+- ✅ Ordenação dos resultados
+- ✅ Filtros dinâmicos utilizando JPA Specifications
+- ✅ Filtros por múltiplos critérios
+- ✅ Integração entre Specifications e paginação
+
+---
+
+# 🔎 Filtros e Paginação
+
+As listagens da API utilizam `Pageable` e **JPA Specifications**, permitindo combinar filtros, paginação e ordenação de forma dinâmica.
+
+Exemplo de requisição:
+
+```text
+GET /produtos?nome=arroz&categoriaId=1&page=0&size=10&sort=nome,asc
+```
+
+Os filtros são representados por DTOs específicos:
+
+- `ProdutoFiltro`
+- `CategoriaFiltro`
+- `ClienteFiltro`
+- `FornecedorFiltro`
+- `CompraFiltro`
+- `VendaFiltro`
+
+A implementação utiliza `JpaSpecificationExecutor` e Specifications baseadas na Criteria API.
 
 ---
 
@@ -219,7 +257,7 @@ Exceções tratadas:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| GET | `/categorias` | Lista todas as categorias |
+| GET | `/categorias` | Lista categorias com filtros, paginação e ordenação |
 | GET | `/categorias/{id}` | Busca categoria por ID |
 | POST | `/categorias` | Cadastra uma categoria |
 | PUT | `/categorias/{id}` | Atualiza uma categoria |
@@ -231,7 +269,7 @@ Exceções tratadas:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| GET | `/produtos` | Lista todos os produtos |
+| GET | `/produtos` | Lista produtos com filtros, paginação e ordenação |
 | GET | `/produtos/{id}` | Busca produto por ID |
 | POST | `/produtos` | Cadastra um produto |
 | PUT | `/produtos/{id}` | Atualiza um produto |
@@ -243,7 +281,7 @@ Exceções tratadas:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| GET | `/clientes` | Lista todos os clientes |
+| GET | `/clientes` | Lista clientes com filtros, paginação e ordenação |
 | GET | `/clientes/{id}` | Busca cliente por ID |
 | POST | `/clientes` | Cadastra um cliente |
 | PUT | `/clientes/{id}` | Atualiza um cliente |
@@ -255,12 +293,11 @@ Exceções tratadas:
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| GET | `/fornecedores` | Lista fornecedores |
-| GET | `/fornecedores/ativos` | Lista fornecedores ativos |
+| GET | `/fornecedores` | Lista fornecedores com filtros, paginação e ordenação |
 | GET | `/fornecedores/{id}` | Busca fornecedor por ID |
 | POST | `/fornecedores` | Cadastra fornecedor |
 | PUT | `/fornecedores/{id}` | Atualiza fornecedor |
-| DELETE | `/fornecedores/{id}` | Desativa fornecedor |
+| DELETE | `/fornecedores/{id}` | Desativa ou remove fornecedor |
 
 ---
 
@@ -282,7 +319,7 @@ Exceções tratadas:
 |--------|----------|-----------|
 | POST | `/compras` | Registra uma nova compra |
 | GET | `/compras/{id}` | Busca uma compra por ID |
-| GET | `/compras` | Lista todas as compras |
+| GET | `/compras` | Lista compras com filtros, paginação e ordenação |
 
 ---
 
@@ -292,7 +329,7 @@ Exceções tratadas:
 |--------|----------|-----------|
 | POST | `/vendas/{idCarrinho}` | Finaliza uma venda utilizando o carrinho |
 | GET | `/vendas/{idVenda}` | Busca uma venda por ID |
-| GET | `/vendas` | Lista todas as vendas |
+| GET | `/vendas` | Lista vendas com filtros, paginação e ordenação |
 
 ---
 
@@ -506,18 +543,37 @@ src/main/java/com/exemplo/meu_primeiro_projeto
 │   └── VendaController.java
 │
 ├── dto
+│   ├── filter
+│   │   ├── ProdutoFiltro.java
+│   │   ├── CategoriaFiltro.java
+│   │   ├── ClienteFiltro.java
+│   │   ├── FornecedorFiltro.java
+│   │   ├── CompraFiltro.java
+│   │   └── VendaFiltro.java
+│   │
 │   ├── request
 │   └── response
 │
 ├── exception
 │   ├── GlobalExceptionHandler.java
-│   └── Exceptions personalizadas
+│   └── Exceções personalizadas
+│
+├── mapper
+│   └── Mappers das entidades
 │
 ├── model
 │   └── Entidades JPA
 │
 ├── repository
-│   └── Interfaces Spring Data JPA
+│   ├── specification
+│   │   ├── ProdutoSpecification.java
+│   │   ├── CategoriaSpecification.java
+│   │   ├── ClienteSpecification.java
+│   │   ├── FornecedorSpecification.java
+│   │   ├── CompraSpecification.java
+│   │   └── VendaSpecification.java
+│   │
+│   └── Repositories Spring Data JPA
 │
 ├── service
 │   └── Regras de negócio da aplicação
@@ -529,31 +585,44 @@ src/main/java/com/exemplo/meu_primeiro_projeto
 
 # 🧪 Testes
 
-O projeto possui testes unitários utilizando **JUnit 5** e **Mockito**, com foco na validação das regras de negócio implementadas nos Services.
+O projeto possui testes automatizados utilizando **JUnit 5** e **Mockito**, com foco nas regras de negócio, paginação e consultas dinâmicas.
 
 Implementados:
 
 - Testes unitários dos Services.
-- Validação de criação, atualização, busca e remoção de entidades.
+- Testes das regras de negócio.
 - Testes de exceções personalizadas.
-- Testes das regras de duplicidade e validações de negócio.
+- Testes de duplicidade e validações.
+- Testes de paginação dos Services.
+- Testes de filtros utilizando Specifications.
+- Testes das Specifications.
 - Utilização de Mockito para isolamento das dependências.
+
+## Resultado
+
+Todos os testes automatizados estão passando atualmente.
+
+- 64 testes executados
+- 0 falhas
+- 0 erros
+- 0 testes ignorados
 
 Próximas implementações:
 
-- Testes de integração dos Controllers utilizando MockMvc.
-- Testes dos principais fluxos completos da aplicação.
+- Testes dos Controllers utilizando MockMvc.
+- Testes de integração dos principais fluxos da aplicação.
 
 ---
 
 # 🔐 Segurança
 
-Melhorias planejadas:
+Próximas implementações:
 
-- Implementação de autenticação utilizando Spring Security.
+- Implementação de Spring Security.
+- Autenticação utilizando JWT.
 - Controle de acesso baseado em perfis de usuário.
-- Proteção dos endpoints através de JWT.
 - Gerenciamento de usuários e permissões.
+- Proteção dos endpoints autenticados.
 
 ---
 
@@ -571,14 +640,15 @@ Melhorias planejadas:
 
 # 🚀 Próximos Passos
 
-- Expandir a documentação da API conforme novas funcionalidades.
-- Implementar testes de integração utilizando MockMvc.
-- Implementar autenticação e autorização.
+- Implementar autenticação e autorização utilizando Spring Security e JWT.
 - Adicionar gerenciamento de usuários.
+- Implementar testes dos Controllers utilizando MockMvc.
+- Implementar testes de integração.
+- Melhorar documentação da autenticação no Swagger.
 - Implementar histórico de movimentações de estoque.
 - Melhorar logs da aplicação.
-- Configurar CI/CD utilizando GitHub Actions.
-- Realizar deploy da API.
+- Expandir CI/CD utilizando GitHub Actions.
+- Preparar deploy da API.
 
 ---
 
