@@ -1,9 +1,10 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.FornecedorFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
@@ -11,6 +12,7 @@ import com.exemplo.meu_primeiro_projeto.exception.FornecedorNaoEncontradoExcepti
 import com.exemplo.meu_primeiro_projeto.mapper.FornecedorMapper;
 import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
+import com.exemplo.meu_primeiro_projeto.repository.specification.FornecedorSpecification;
 
 @Service
 public class FornecedorService {
@@ -23,18 +25,9 @@ public class FornecedorService {
         this.mapper = mapper;
     }
 
-    public List<FornecedorResponse> listarFornecedores() {
-        return repository.findAll()
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
-    }
-
-    public List<FornecedorResponse> listarFornecedoresAtivos() {
-        return repository.findByAtivoTrue()
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+    public Page<FornecedorResponse> listarFornecedores(FornecedorFiltro filtro, Pageable pageable) {
+        return repository.findAll(FornecedorSpecification.comFiltro(filtro), pageable)
+                .map(mapper::toResponse);
     }
 
     public FornecedorResponse buscarPorId(Long id) {
