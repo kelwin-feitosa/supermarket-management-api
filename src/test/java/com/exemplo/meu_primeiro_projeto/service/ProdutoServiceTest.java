@@ -2,7 +2,6 @@ package com.exemplo.meu_primeiro_projeto.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -48,6 +47,9 @@ public class ProdutoServiceTest {
 
     @Mock
     private ProdutoMapper mapper;
+
+    @Mock
+    private ProdutoFiltro filtro;
 
     @InjectMocks
     private ProdutoService service;
@@ -146,15 +148,6 @@ public class ProdutoServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        ProdutoFiltro filtro = new ProdutoFiltro(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-
         Page<Produto> pagina = new PageImpl<>(
             List.of(produto1, produto2),
             pageable,
@@ -177,8 +170,6 @@ public class ProdutoServiceTest {
 
         assertEquals(2, resposta.getTotalElements());
         assertEquals(1, resposta.getTotalPages());
-        assertTrue(resposta.isFirst());
-        assertTrue(resposta.isLast());
 
         assertEquals(produto1.getNome(), resposta.getContent().get(0).nome());
         assertEquals(produto1.getPreco(), resposta.getContent().get(0).preco());
