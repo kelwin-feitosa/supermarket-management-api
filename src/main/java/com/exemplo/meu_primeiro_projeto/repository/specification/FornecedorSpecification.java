@@ -9,7 +9,7 @@ public class FornecedorSpecification {
 
     public static Specification<Fornecedor> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -21,7 +21,7 @@ public class FornecedorSpecification {
 
     public static Specification<Fornecedor> cnpjContem(String cnpj) {
         if (cnpj == null || cnpj.isBlank()) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
@@ -31,10 +31,20 @@ public class FornecedorSpecification {
             );
     }
 
+    public static Specification<Fornecedor> ativoIgual(Boolean ativo) {
+        if (ativo == null) {
+            return Specification.unrestricted();
+        }
+
+        return (root, query, criteriaBuilder) ->
+            criteriaBuilder.equal(root.get("ativo"), ativo);
+    }
+
     public static Specification<Fornecedor> comFiltro(FornecedorFiltro filtro) {
         return Specification.allOf(
             nomeContem(filtro.nome()),
-            cnpjContem(filtro.cnpj())
+            cnpjContem(filtro.cnpj()),
+            ativoIgual(filtro.ativo())
         );
     }
 }
