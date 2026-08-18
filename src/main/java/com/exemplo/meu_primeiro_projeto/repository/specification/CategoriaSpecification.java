@@ -9,7 +9,7 @@ public class CategoriaSpecification {
 
     public static Specification<Categoria> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
-            return null;
+            return Specification.unrestricted();
         }
 
         return (root, query, criteriaBuilder) ->
