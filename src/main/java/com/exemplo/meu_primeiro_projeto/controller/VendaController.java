@@ -3,6 +3,7 @@ package com.exemplo.meu_primeiro_projeto.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.VendaFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
 import com.exemplo.meu_primeiro_projeto.service.VendaService;
@@ -14,8 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -89,9 +91,9 @@ public class VendaController {
         return ResponseEntity.ok(service.buscarVenda(idVenda));
     }
 
-     @Operation(
+    @Operation(
         summary = "Listar vendas",
-        description = "Lista todas as vendas realizadas no sistema."
+        description = "Lista as vendas realizadas no sistema, permitindo filtragem e paginação."
     )
     @ApiResponses({
         @ApiResponse(
@@ -99,9 +101,12 @@ public class VendaController {
             description = "Vendas listadas com sucesso"
         )
     })
-    @GetMapping 
-    public ResponseEntity<List<VendaResponse>> listarVendas() {
-        return ResponseEntity.ok(service.listarVendas());
+    @GetMapping
+    public ResponseEntity<Page<VendaResponse>> listarVendas(
+            VendaFiltro filtro,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+
+        return ResponseEntity.ok(service.listarVendas(filtro, pageable));
     }
 
 }
