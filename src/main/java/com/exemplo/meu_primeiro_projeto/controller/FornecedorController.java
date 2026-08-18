@@ -1,7 +1,8 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.FornecedorFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.request.FornecedorRequest;
 import com.exemplo.meu_primeiro_projeto.dto.response.FornecedorResponse;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
@@ -42,7 +44,7 @@ public class FornecedorController {
     
     @Operation(
         summary = "Listar fornecedores",
-        description = "Lista todos os fornecedores cadastrados no sistema."
+        description = "Lista os fornecedores cadastrados no sistema, permitindo filtragem e paginação."
     )
     @ApiResponses({
         @ApiResponse(
@@ -51,23 +53,11 @@ public class FornecedorController {
         )
     })
     @GetMapping 
-    public ResponseEntity<List<FornecedorResponse>> listarFornecedores() {
-        return ResponseEntity.ok(service.listarFornecedores());
-    }
+    public ResponseEntity<Page<FornecedorResponse>> listarFornecedores(
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable,
+            FornecedorFiltro filtro) {
 
-    @Operation(
-        summary = "Listar fornecedores ativos",
-        description = "Lista somente os fornecedores que estão ativos no sistema."
-    )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Fornecedores ativos listados com sucesso"
-        )
-    })
-    @GetMapping("/ativos")
-    public ResponseEntity<List<FornecedorResponse>> listarFornecedoresAtivos() {
-        return ResponseEntity.ok(service.listarFornecedoresAtivos());
+        return ResponseEntity.ok(service.listarFornecedores(filtro, pageable));
     }
 
      @Operation(
