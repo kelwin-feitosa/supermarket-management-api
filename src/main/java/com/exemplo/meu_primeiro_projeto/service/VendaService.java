@@ -1,9 +1,10 @@
 package com.exemplo.meu_primeiro_projeto.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.exemplo.meu_primeiro_projeto.dto.filter.VendaFiltro;
 import com.exemplo.meu_primeiro_projeto.dto.response.VendaResponse;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
@@ -15,6 +16,7 @@ import com.exemplo.meu_primeiro_projeto.model.ItemVenda;
 import com.exemplo.meu_primeiro_projeto.model.Venda;
 import com.exemplo.meu_primeiro_projeto.repository.CarrinhoRepository;
 import com.exemplo.meu_primeiro_projeto.repository.VendaRepository;
+import com.exemplo.meu_primeiro_projeto.repository.specification.VendaSpecification;
 
 import jakarta.transaction.Transactional;
 
@@ -73,11 +75,9 @@ public class VendaService {
         return mapper.toResponse(venda);
     }
 
-    public List<VendaResponse> listarVendas() {
-        return vendaRepository.findAll()
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+    public Page<VendaResponse> listarVendas(VendaFiltro filtro, Pageable pageable) {
+        return vendaRepository.findAll(VendaSpecification.comFiltro(filtro), pageable)
+                .map(mapper::toResponse);
     }
 
     private Venda verificarVenda(Long idVenda) {
