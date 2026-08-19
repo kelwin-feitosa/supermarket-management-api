@@ -30,4 +30,6 @@ jobs:
       - name: Analisar com SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw sonar:sonar -Dsonar.token=$SONAR_TOKEN
+        run: ./mvnw sonar:sonar \
+          -Dsonar.organization=kelwin-feitosa \
+          -Dsonar.token=$SONAR_TOKEN
