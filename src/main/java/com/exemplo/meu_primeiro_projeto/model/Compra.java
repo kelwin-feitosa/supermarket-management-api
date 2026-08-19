@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.exemplo.meu_primeiro_projeto.util.DataHoraUtil;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,7 +44,7 @@ public class Compra {  //Representando as compras feitas com o fornecedor
 
     @PrePersist
     public void prePersist() {
-        dataCompra = LocalDateTime.now();
+        dataCompra = DataHoraUtil.agora();
     }
 
     public void adicionarItem(ItemCompra item) {
@@ -59,7 +61,6 @@ public class Compra {  //Representando as compras feitas com o fornecedor
     public List<ItemCompra> getItens() { return itens; }
 
     public LocalDateTime getDataCompra() { return dataCompra; }
-    public void setDataCompra(LocalDateTime dataCompra) { this.dataCompra = dataCompra; }
 
     public BigDecimal getValorTotal() { return valorTotal; }
     public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }

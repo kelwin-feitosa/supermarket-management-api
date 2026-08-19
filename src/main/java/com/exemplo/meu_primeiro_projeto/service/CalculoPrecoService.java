@@ -16,16 +16,14 @@ public class CalculoPrecoService {
     public BigDecimal calcularValorTotal(List<ItemCarrinho> itens) {
         return itens.stream()
             .map(ItemCarrinho::getSubtotal)
-            .reduce(BigDecimal.ZERO, (total, subtotal) -> total.add(subtotal));
-                                 //, BigDecimal::add));
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal calcularValorTotalVenda(List<ItemVenda> itens) {
         return itens.stream()
-                .map(item -> item.getSubtotal())
-                   //ItemVenda::Subtotal
-                .reduce(BigDecimal.ZERO, (total, subtotal) -> total.add(subtotal));
-    }                                //, BigDecimal::add));
+                .map(ItemVenda::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }                                
 
     public BigDecimal calcularValorTotalCompra(List<ItemCompra> itens) {
         return itens.stream()

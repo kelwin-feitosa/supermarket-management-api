@@ -9,6 +9,8 @@ import com.exemplo.meu_primeiro_projeto.model.Produto;
 
 public class ProdutoSpecification {
 
+    private ProdutoSpecification() {}
+
     public static Specification<Produto> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
             return Specification.unrestricted();

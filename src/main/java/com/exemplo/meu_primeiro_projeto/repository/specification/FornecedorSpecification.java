@@ -7,6 +7,8 @@ import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 
 public class FornecedorSpecification {
 
+    private FornecedorSpecification() {}
+
     public static Specification<Fornecedor> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
             return Specification.unrestricted();

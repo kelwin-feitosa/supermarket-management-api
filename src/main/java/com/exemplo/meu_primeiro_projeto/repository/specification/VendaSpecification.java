@@ -9,6 +9,8 @@ import com.exemplo.meu_primeiro_projeto.model.Venda;
 
 public class VendaSpecification {
 
+    private VendaSpecification() {}
+
     public static Specification<Venda> clienteIgual(Long clienteId) {
         if (clienteId == null) {
             return Specification.unrestricted();

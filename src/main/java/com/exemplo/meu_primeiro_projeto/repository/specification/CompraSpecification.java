@@ -9,6 +9,8 @@ import com.exemplo.meu_primeiro_projeto.model.Compra;
 
 public class CompraSpecification {
 
+    private CompraSpecification() {}
+
     public static Specification<Compra> fornecedorIgual(Long idFornecedor) {
         if (idFornecedor == null) {
             return Specification.unrestricted();

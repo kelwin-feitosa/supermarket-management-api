@@ -1,8 +1,9 @@
 package com.exemplo.meu_primeiro_projeto.model;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.exemplo.meu_primeiro_projeto.util.DataHoraUtil;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class Produto {
 
     @PrePersist
     public void prePersist() {
-        dataCadastro = LocalDateTime.now();
+        dataCadastro = DataHoraUtil.agora();
     }
 
     //Request para Produto
@@ -70,6 +71,5 @@ public class Produto {
     public void setQuantidadeEstoque(Integer quantidadeEstoque) { this.quantidadeEstoque = quantidadeEstoque; }
 
     public LocalDateTime getDataCadastro() { return this.dataCadastro; }
-    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
 
 }

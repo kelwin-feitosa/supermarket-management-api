@@ -7,6 +7,8 @@ import com.exemplo.meu_primeiro_projeto.model.Cliente;
 
 public class ClienteSpecification {
 
+    private ClienteSpecification() {}
+
     public static Specification<Cliente> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
             return Specification.unrestricted();

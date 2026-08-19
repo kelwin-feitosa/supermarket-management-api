@@ -25,6 +25,7 @@ import com.exemplo.meu_primeiro_projeto.exception.ProdutoJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ProdutoNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
 import com.exemplo.meu_primeiro_projeto.exception.VendaNaoEncontradaException;
+import com.exemplo.meu_primeiro_projeto.util.DataHoraUtil;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -142,7 +143,7 @@ public class GlobalExceptionHandler {
             .body(new RespostaErro (
                 titulo,
                 detalhes,
-                LocalDateTime.now()
+                DataHoraUtil.agora()
             ));
     }
 }

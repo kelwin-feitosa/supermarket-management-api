@@ -7,6 +7,8 @@ import com.exemplo.meu_primeiro_projeto.model.Categoria;
 
 public class CategoriaSpecification {
 
+    private CategoriaSpecification() {}
+
     public static Specification<Categoria> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
             return Specification.unrestricted();
