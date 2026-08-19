@@ -24,5 +24,10 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Executar testes
-        run: ./mvnw test
+      - name: Executar testes e gerar cobertura
+        run: ./mvnw clean verify
+
+      - name: Analisar com SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./mvnw sonar:sonar -Dsonar.token=$SONAR_TOKEN
