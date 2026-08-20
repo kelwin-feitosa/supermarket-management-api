@@ -29,6 +29,11 @@ jobs:
       - name: Executar testes e gerar cobertura
         run: ./mvnw clean verify
 
+      - name: Verificar relatório JaCoCo
+        run: |
+          ls -lh target/site/jacoco/
+          test -f target/site/jacoco/jacoco.xml
+
       - name: Analisar com SonarCloud
         if: github.event_name == 'push'
         env:
