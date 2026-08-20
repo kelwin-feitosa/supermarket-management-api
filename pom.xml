@@ -18,6 +18,8 @@
 
     <properties>
         <java.version>21</java.version>
+        <sonar.projectKey>kelwin-feitosa_supermarket-management-api</sonar.projectKey>
+        <sonar.organization>kelwin-feitosa</sonar.organization>
     </properties>
 
     <dependencies>
