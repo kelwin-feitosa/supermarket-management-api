@@ -1,7 +1,5 @@
 package com.exemplo.meu_primeiro_projeto.exception.handler;
 
-import java.time.LocalDateTime;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
