@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: supermarket-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: supermarket
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+    - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
