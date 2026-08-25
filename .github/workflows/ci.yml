@@ -42,6 +42,12 @@ jobs:
           distribution: "temurin"
           cache: maven
 
+      - name: Verificar PostgreSQL
+        run: |
+          pg_isready -h localhost -p 5433 -U postgres -d supermarket
+
+      - name: Executar testes e gerar cobertura
+        run: ./mvnw clean verify
       - name: Executar testes e gerar cobertura
         run: ./mvnw clean verify
 
