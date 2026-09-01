@@ -1,677 +1,638 @@
-# 🛒 API REST para Gerenciamento de Supermercado
+<div align="center">
 
-API REST desenvolvida com **Java 21** e **Spring Boot 3** com o objetivo de criar um sistema backend para gerenciamento de operações comerciais de um supermercado.
+# 🛒 Supermarket Management API
 
-O projeto aplica boas práticas de desenvolvimento backend utilizando arquitetura em camadas, Spring Data JPA, Hibernate, Jakarta Validation, DTOs, documentação com Swagger/OpenAPI, tratamento global de exceções e regras de negócio.
+### API REST para gerenciamento de supermercado
 
-O sistema contempla o gerenciamento de **produtos, categorias, clientes, fornecedores, carrinhos de compras, compras e vendas**, sendo desenvolvido com foco em organização, escalabilidade e práticas utilizadas no desenvolvimento de aplicações profissionais.
+**Java 21 · Spring Boot 4 · PostgreSQL · JPA · Docker**
+
+<br>
+
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge\&logo=openjdk\&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-6DB33F?style=for-the-badge\&logo=springboot\&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-316192?style=for-the-badge\&logo=postgresql\&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)](https://www.docker.com/)
+
+[![Tests](https://img.shields.io/badge/Tests-75%20passing-25A162?style=for-the-badge\&logo=junit5\&logoColor=white)](https://junit.org/junit5/)
+[![JaCoCo](https://img.shields.io/badge/JaCoCo-Coverage-EF2D5E?style=for-the-badge)](https://www.jacoco.org/jacoco/)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-Analysis-F3702A?style=for-the-badge\&logo=sonarcloud\&logoColor=white)](https://sonarcloud.io/)
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=for-the-badge\&logo=githubactions\&logoColor=white)](https://github.com/features/actions)
+
+</div>
 
 ---
 
-# 🚀 Tecnologias Utilizadas
+## 📌 Sobre o projeto
 
-- Java 21
-- Spring Boot 3
-- Spring Data JPA
-- Hibernate
-- Jakarta Validation
-- Springdoc OpenAPI (Swagger)
-- PostgreSQL
-- H2 Database
-- Maven
-- Git e GitHub
-- Postman
-- Linux
-- JUnit 5
-- Mockito
+O **Supermarket Management API** é uma API REST desenvolvida com **Java 21** e **Spring Boot 4**, criada para simular o backend de um sistema de gerenciamento de supermercado.
+
+O projeto foi desenvolvido com foco em **boas práticas de desenvolvimento backend**, organização de código, regras de negócio, persistência relacional, testes automatizados e infraestrutura reproduzível.
+
+A aplicação possui módulos para gerenciamento de produtos, categorias, clientes, fornecedores, compras, vendas e carrinho de compras.
+
+---
+
+## 🎯 Objetivo
+
+O objetivo do projeto é colocar em prática conceitos importantes do desenvolvimento backend profissional, indo além de operações CRUD simples.
+
+Entre os principais conceitos aplicados estão:
+
+* Arquitetura em camadas
+* Princípios de separação de responsabilidades
+* Spring Data JPA
+* Hibernate
+* Specifications e filtros dinâmicos
+* Paginação e ordenação
+* DTOs
+* Validação de dados
+* Regras de negócio
+* Tratamento global de exceções
+* Testes unitários
+* Testes de persistência
+* Migração de banco de dados
+* Containerização
+* Integração contínua
 
 ---
 
 # 🏗️ Arquitetura
 
-A aplicação segue uma arquitetura em camadas:
-
-- **Controller** → responsável pela exposição dos endpoints REST e comunicação com o cliente.
-- **Service** → contém as regras de negócio e validações da aplicação.
-- **Repository** → realiza a comunicação com o banco de dados utilizando Spring Data JPA.
-- **Model** → entidades persistidas utilizando JPA/Hibernate.
-- **DTO** → objetos utilizados para entrada e saída de dados, evitando exposição direta das entidades.
-- **Exception Handler** → tratamento centralizado de erros e respostas padronizadas.
-
----
-
-# 🧠 Conceitos aplicados
-
-Durante o desenvolvimento foram aplicados conceitos importantes de desenvolvimento backend:
-
-- Programação Orientada a Objetos.
-- Princípios SOLID.
-- Separação de responsabilidades.
-- Injeção de dependências.
-- Persistência com JPA/Hibernate.
-- Modelagem de banco relacional.
-- DTO Pattern.
-- Tratamento global de exceções.
-- Validação de dados.
-- Testes unitários com JUnit 5 e Mockito.
-- Paginação e ordenação com Spring Data.
-- Filtros dinâmicos utilizando JPA Specifications.
-- Consultas dinâmicas com Criteria API.
-- Testes de Specifications.
-- Paginação e ordenação com Spring Data.
-- Filtros dinâmicos utilizando JPA Specifications.
-- Consultas dinâmicas com Criteria API.
-- Composição de Specifications.
-
----
-
-# 📂 Modelagem do Sistema
-
-O sistema possui as seguintes entidades:
-
-- Categoria
-- Produto
-- Cliente
-- Fornecedor
-- Carrinho
-- ItemCarrinho
-- Compra
-- ItemCompra
-- Venda
-- ItemVenda
-
-## Principais relacionamentos
-
-- Uma **Categoria** possui vários produtos.
-- Um **Produto** pertence a uma categoria.
-- Um **Cliente** possui um carrinho.
-- Um **Carrinho** possui vários itens.
-- Um **ItemCarrinho** representa um produto dentro de um carrinho.
-- Uma **Venda** pertence a um cliente.
-- Uma **Venda** possui vários itens vendidos.
-- Uma **Compra** pertence a um fornecedor.
-- Uma **Compra** possui vários itens comprados.
-
----
-
-# 📋 Funcionalidades
-
-## Implementadas
-
-- ✅ Modelagem das entidades utilizando JPA/Hibernate
-- ✅ Relacionamentos entre entidades
-- ✅ DTOs de Request e Response
-- ✅ Validação utilizando Jakarta Validation
-- ✅ CRUD de produtos
-- ✅ CRUD de categorias
-- ✅ CRUD de clientes
-- ✅ CRUD de fornecedores
-- ✅ Registro de compras
-- ✅ Gerenciamento de carrinho de compras
-- ✅ Adição de produtos ao carrinho
-- ✅ Alteração de quantidade dos itens
-- ✅ Remoção de itens do carrinho
-- ✅ Limpeza completa do carrinho
-- ✅ Cálculo automático de subtotal dos itens
-- ✅ Cálculo automático do valor total
-- ✅ Registro de vendas
-- ✅ Conversão de carrinho em venda
-- ✅ Atualização automática de estoque após venda
-- ✅ Validação de estoque disponível
-- ✅ Tratamento global de exceções
-- ✅ Documentação da API utilizando Swagger/OpenAPI
-- ✅ Testes unitários dos Services utilizando JUnit 5 e Mockito
-- ✅ Testes das Specifications utilizando JUnit 5
-- ✅ 64 testes automatizados
-- ✅ Validação das regras de negócio
-- ✅ Paginação das listagens utilizando Spring Data Pageable
-- ✅ Ordenação dos resultados
-- ✅ Filtros dinâmicos utilizando JPA Specifications
-- ✅ Filtros por múltiplos critérios
-- ✅ Integração entre Specifications e paginação
-
----
-
-# 🔎 Filtros e Paginação
-
-As listagens da API utilizam `Pageable` e **JPA Specifications**, permitindo combinar filtros, paginação e ordenação de forma dinâmica.
-
-Exemplo de requisição:
+A aplicação utiliza uma arquitetura em camadas:
 
 ```text
-GET /produtos?nome=arroz&categoriaId=1&page=0&size=10&sort=nome,asc
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+PostgreSQL
 ```
 
-Os filtros são representados por DTOs específicos:
-
-- `ProdutoFiltro`
-- `CategoriaFiltro`
-- `ClienteFiltro`
-- `FornecedorFiltro`
-- `CompraFiltro`
-- `VendaFiltro`
-
-A implementação utiliza `JpaSpecificationExecutor` e Specifications baseadas na Criteria API.
-
----
-
-# 🛡️ Validação
-
-Os dados recebidos pela API são validados utilizando **Jakarta Validation**.
-
-Validações implementadas:
-
-- Campos obrigatórios
-- Valores positivos
-- E-mail válido
-- CNPJ com formato correto
-- Estoque não negativo
-- Limitação de tamanho de campos
-- Validação de quantidade de produtos
-- Validação de regras comerciais
-
----
-
-# 📦 Regras de Negócio
-
-Algumas regras implementadas no sistema:
-
-## Carrinho
-
-- Um cliente pode possuir um carrinho de compras.
-- Produtos adicionados ao carrinho possuem quantidade e preço registrado no momento da inclusão.
-- Caso o produto já exista no carrinho, sua quantidade é atualizada.
-- Não é permitido adicionar quantidade superior ao estoque disponível.
-- O valor total do carrinho é calculado automaticamente com base nos itens adicionados.
-
----
-
-## Venda
-
-- Não é possível finalizar uma venda com carrinho vazio.
-- Ao realizar uma venda:
-
-  - Os itens do carrinho são transformados em itens da venda.
-  - O estoque dos produtos é atualizado automaticamente.
-  - O valor total da venda é calculado.
-  - O carrinho é limpo após a conclusão.
-
----
-
-## Compra
-
-- Uma compra deve possuir um fornecedor válido.
-- Uma compra deve possuir pelo menos um item.
-- Os produtos comprados possuem quantidade e preço de compra registrados.
-- O valor total da compra é calculado automaticamente através dos itens.
-
----
-
-## Estoque
-
-- O sistema verifica a disponibilidade antes de adicionar produtos ao carrinho.
-- A quantidade em estoque não pode ser negativa.
-- A baixa do estoque ocorre automaticamente após uma venda.
-- Compras podem ser utilizadas para reposição de estoque.
-
----
-
-# ❌ Tratamento de Erros
-
-A API possui tratamento global de exceções utilizando `@ControllerAdvice`.
-
-Todas as respostas de erro seguem um padrão:
-
-```json
-{
-  "mensagem": "Dados enviados não passam nas regras de validação.",
-  "detalhes": "O preço deve ser maior que zero.",
-  "timestamp": "2026-07-09T20:05:32"
-}
-```
-
-Exceções tratadas:
-
-- Produto não encontrado
-- Categoria não encontrada
-- Cliente não encontrado
-- Fornecedor não encontrado
-- Carrinho não encontrado
-- Item do carrinho não encontrado
-- Venda não encontrada
-- Compra não encontrada
-- Produto já existente
-- Categoria já existente
-- Cliente já cadastrado
-- CNPJ já cadastrado
-- Estoque insuficiente
-- Carrinho vazio
-- Erros de validação
-- JSON inválido
-
----
-
-# 🌐 Endpoints
-
-## Categorias
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/categorias` | Lista categorias com filtros, paginação e ordenação |
-| GET | `/categorias/{id}` | Busca categoria por ID |
-| POST | `/categorias` | Cadastra uma categoria |
-| PUT | `/categorias/{id}` | Atualiza uma categoria |
-| DELETE | `/categorias/{id}` | Remove uma categoria |
-
----
-
-## Produtos
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/produtos` | Lista produtos com filtros, paginação e ordenação |
-| GET | `/produtos/{id}` | Busca produto por ID |
-| POST | `/produtos` | Cadastra um produto |
-| PUT | `/produtos/{id}` | Atualiza um produto |
-| DELETE | `/produtos/{id}` | Remove um produto |
-
----
-
-## Clientes
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/clientes` | Lista clientes com filtros, paginação e ordenação |
-| GET | `/clientes/{id}` | Busca cliente por ID |
-| POST | `/clientes` | Cadastra um cliente |
-| PUT | `/clientes/{id}` | Atualiza um cliente |
-| DELETE | `/clientes/{id}` | Remove um cliente |
-
----
-
-## Fornecedores
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/fornecedores` | Lista fornecedores com filtros, paginação e ordenação |
-| GET | `/fornecedores/{id}` | Busca fornecedor por ID |
-| POST | `/fornecedores` | Cadastra fornecedor |
-| PUT | `/fornecedores/{id}` | Atualiza fornecedor |
-| DELETE | `/fornecedores/{id}` | Desativa ou remove fornecedor |
-
----
-
-## Carrinhos
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| POST | `/carrinhos/{idCliente}` | Cria um carrinho para um cliente |
-| POST | `/carrinhos/itens` | Adiciona um produto ao carrinho |
-| PUT | `/carrinhos/itens` | Atualiza a quantidade de um item |
-| DELETE | `/carrinhos/itens` | Remove um item do carrinho |
-| DELETE | `/carrinhos/{idCarrinho}` | Remove todos os itens do carrinho |
-
----
-
-## Compras
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| POST | `/compras` | Registra uma nova compra |
-| GET | `/compras/{id}` | Busca uma compra por ID |
-| GET | `/compras` | Lista compras com filtros, paginação e ordenação |
-
----
-
-## Vendas
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| POST | `/vendas/{idCarrinho}` | Finaliza uma venda utilizando o carrinho |
-| GET | `/vendas/{idVenda}` | Busca uma venda por ID |
-| GET | `/vendas` | Lista vendas com filtros, paginação e ordenação |
-
----
-
-# 📥 Exemplos de Requisição
-
-## Cadastro de Produto
-
-```json
-{
-  "nome": "Arroz 5kg",
-  "preco": 29.90,
-  "descricao": "Arroz branco tipo 1",
-  "quantidadeEstoque": 50,
-  "categoriaId": 1
-}
-```
-
----
-
-## Cadastro de Cliente
-
-```json
-{
-  "nome": "João Silva",
-  "email": "joao@email.com",
-  "telefone": "61999999999"
-}
-```
-
----
-
-## Adicionar Produto ao Carrinho
-
-```json
-{
-  "carrinhoId": 1,
-  "produtoId": 1,
-  "quantidade": 2
-}
-```
-
----
-
-## Registrar Compra
-
-```json
-{
-  "fornecedorId": 1,
-  "itens": [
-    {
-      "produtoId": 1,
-      "quantidade": 100,
-      "precoCompra": 20.00
-    }
-  ]
-}
-```
-
----
-
-# 📤 Exemplos de Respostas
-
-## Produto
-
-```json
-{
-  "id": 1,
-  "nome": "Arroz 5kg",
-  "preco": 29.90,
-  "descricao": "Arroz branco tipo 1",
-  "quantidadeEstoque": 50,
-  "categoriaId": 1,
-  "dataCadastro": "2026-07-15T14:30:52"
-}
-```
-
----
-
-## Carrinho
-
-```json
-{
-  "id": 1,
-  "valorTotal": 59.80,
-  "itens": [
-    {
-      "id": 1,
-      "produtoId": 1,
-      "nomeProduto": "Arroz 5kg",
-      "quantidade": 2,
-      "precoUnitario": 29.90,
-      "subtotal": 59.80
-    }
-  ]
-}
-```
-
----
-
-## Venda
-
-```json
-{
-  "id": 1,
-  "clienteId": 1,
-  "dataVenda": "2026-07-23T15:30:00",
-  "valorTotal": 59.80,
-  "itens": [
-    {
-      "produtoId": 1,
-      "nomeProduto": "Arroz 5kg",
-      "quantidade": 2,
-      "precoUnitario": 29.90,
-      "subtotal": 59.80
-    }
-  ]
-}
-```
-
----
-
-# ▶️ Como Executar o Projeto
-
-## Pré-requisitos
-
-Antes de executar a aplicação, é necessário possuir instalado:
-
-- Java 21
-- Maven
-- Git
-
----
-
-## Clonar o repositório
-
-```bash
-git clone https://github.com/kelwin-feitosa/api-gerenciamento-supermercado.git
-```
-
-Acesse a pasta do projeto:
-
-```bash
-cd api-gerenciamento-supermercado
-```
-
----
-
-## Executar a aplicação
-
-Utilizando Maven:
-
-```bash
-./mvnw spring-boot:run
-```
-
-Ou pelo Maven instalado:
-
-```bash
-mvn spring-boot:run
-```
-
-Após iniciar, a API estará disponível em:
-
-```
-http://localhost:8080
-```
-
----
-
-# 📚 Documentação da API
-
-A API utiliza **Springdoc OpenAPI** e **Swagger UI** para gerar documentação interativa dos endpoints.
-
-Após iniciar a aplicação, acesse:
-
-```
-http://localhost:8080/swagger-ui/index.html
-```
-
-No Swagger é possível:
-
-- Visualizar todos os endpoints disponíveis.
-- Consultar parâmetros e validações.
-- Visualizar os DTOs de requisição e resposta.
-- Testar requisições diretamente pelo navegador.
-- Consultar códigos de resposta HTTP.
-- Visualizar exemplos de requisições e respostas.
-
-Tecnologias utilizadas:
-
-- Springdoc OpenAPI
-- Swagger UI
-
----
-
-# 🗂️ Estrutura do Projeto
-
-```
-src/main/java/com/exemplo/meu_primeiro_projeto
-
-├── config
-│   └── OpenApiConfig.java
-│
-├── controller
-│   ├── ProdutoController.java
-│   ├── CategoriaController.java
-│   ├── ClienteController.java
-│   ├── FornecedorController.java
-│   ├── CarrinhoController.java
-│   ├── CompraController.java
-│   └── VendaController.java
-│
-├── dto
-│   ├── filter
-│   │   ├── ProdutoFiltro.java
-│   │   ├── CategoriaFiltro.java
-│   │   ├── ClienteFiltro.java
-│   │   ├── FornecedorFiltro.java
-│   │   ├── CompraFiltro.java
-│   │   └── VendaFiltro.java
+Organização principal:
+
+```text
+src
+├── main
+│   ├── java
+│   │   └── com.exemplo.meu_primeiro_projeto
+│   │       ├── config
+│   │       ├── controller
+│   │       ├── dto
+│   │       ├── exception
+│   │       ├── mapper
+│   │       ├── model
+│   │       ├── repository
+│   │       │   └── specification
+│   │       ├── service
+│   │       └── util
 │   │
-│   ├── request
-│   └── response
+│   └── resources
+│       ├── db
+│       │   └── migration
+│       └── application.properties
 │
-├── exception
-│   ├── GlobalExceptionHandler.java
-│   └── Exceções personalizadas
-│
-├── mapper
-│   └── Mappers das entidades
-│
-├── model
-│   └── Entidades JPA
-│
-├── repository
-│   ├── specification
-│   │   ├── ProdutoSpecification.java
-│   │   ├── CategoriaSpecification.java
-│   │   ├── ClienteSpecification.java
-│   │   ├── FornecedorSpecification.java
-│   │   ├── CompraSpecification.java
-│   │   └── VendaSpecification.java
-│   │
-│   └── Repositories Spring Data JPA
-│
-├── service
-│   └── Regras de negócio da aplicação
-│
-└── MeuPrimeiroProjetoApplication.java
+└── test
+    ├── java
+    └── resources
+        └── application-test.properties
+```
+
+---
+
+# 🚀 Funcionalidades
+
+### 📦 Produtos
+
+* Cadastro de produtos
+* Atualização
+* Consulta por ID
+* Listagem paginada
+* Filtros dinâmicos
+* Controle de estoque
+* Validação de preços
+* Associação com categorias
+
+### 🏷️ Categorias
+
+* Cadastro
+* Atualização
+* Consulta
+* Listagem paginada
+* Filtros
+* Validação de duplicidade
+
+### 👤 Clientes
+
+* Cadastro
+* Atualização
+* Consulta
+* Listagem
+* Filtros
+* Validação de dados
+* Criação automática do carrinho
+
+### 🏭 Fornecedores
+
+* Cadastro
+* Atualização
+* Consulta
+* Listagem
+* Filtros
+* Controle de fornecedores ativos
+* Validação de CNPJ
+
+### 🛒 Carrinho
+
+* Consulta do carrinho
+* Adição de produtos
+* Alteração de quantidade
+* Remoção de itens
+* Cálculo de subtotal
+* Cálculo do valor total
+* Validação de estoque
+
+### 🧾 Vendas
+
+* Criação de vendas
+* Associação com clientes
+* Adição de itens
+* Cálculo de valores
+* Baixa automática de estoque
+* Histórico de vendas
+* Filtros por cliente e período
+
+### 🚚 Compras
+
+* Registro de compras
+* Associação com fornecedores
+* Registro de itens
+* Atualização de estoque
+* Histórico de compras
+* Filtros por fornecedor e período
+
+---
+
+# 🔎 Filtros e paginação
+
+A API utiliza **Spring Data JPA Specifications** para permitir consultas dinâmicas.
+
+Exemplo conceitual:
+
+```text
+GET /produtos?
+    nome=arroz
+    &categoriaId=1
+    &precoMin=5
+    &precoMax=30
+    &estoqueMin=10
+```
+
+Os filtros são combinados dinamicamente, evitando a criação de diversos métodos específicos no Repository.
+
+Também são utilizadas:
+
+* Paginação
+* Ordenação
+* Specifications reutilizáveis
+* Criteria API
+* Composição de filtros
+
+---
+
+# 🧠 Regras de negócio
+
+O projeto possui regras de negócio implementadas na camada de serviço, incluindo:
+
+* Verificação de duplicidade
+* Validação de entidades relacionadas
+* Validação de disponibilidade de estoque
+* Controle de quantidade de produtos
+* Atualização automática de estoque
+* Cálculo de subtotais
+* Cálculo de valores totais
+* Validação de operações de compra e venda
+* Criação automática de carrinho para clientes
+
+---
+
+# ⚠️ Tratamento de exceções
+
+A API possui tratamento global de exceções para manter respostas padronizadas.
+
+Exemplo:
+
+```json
+{
+  "mensagem": "Já existe uma categoria com esse nome.",
+  "detalhes": "Já existe uma categoria com esse nome.",
+  "timestamp": "2026-08-31T..."
+}
+```
+
+Entre os cenários tratados estão:
+
+* Recurso não encontrado
+* Dados inválidos
+* Regras de negócio violadas
+* Conflitos de dados
+* Erros de validação
+
+---
+
+# 🗄️ Banco de dados
+
+O projeto utiliza **PostgreSQL 17** como banco de dados principal.
+
+O schema é controlado pelo **Flyway**, permitindo versionar as alterações estruturais do banco.
+
+```text
+PostgreSQL
+     │
+     ▼
+   Flyway
+     │
+     ▼
+  Schema
+     │
+     ▼
+Hibernate / JPA
+```
+
+A primeira migration cria as principais tabelas da aplicação:
+
+```text
+categoria
+cliente
+fornecedor
+produto
+carrinho
+item_carrinho
+compra
+item_compra
+venda
+item_venda
 ```
 
 ---
 
 # 🧪 Testes
 
-O projeto possui testes automatizados utilizando **JUnit 5** e **Mockito**, com foco nas regras de negócio, paginação e consultas dinâmicas.
+O projeto possui **75 testes automatizados**, utilizando:
 
-Implementados:
+* JUnit 5
+* Mockito
+* Spring Boot Test
+* Spring Data JPA Test
+* PostgreSQL
 
-- Testes unitários dos Services.
-- Testes das regras de negócio.
-- Testes de exceções personalizadas.
-- Testes de duplicidade e validações.
-- Testes de paginação dos Services.
-- Testes de filtros utilizando Specifications.
-- Testes das Specifications.
-- Utilização de Mockito para isolamento das dependências.
+Os testes cobrem principalmente:
 
-## Resultado
+* Services
+* Regras de negócio
+* Repositories
+* Specifications
+* Persistência
+* Filtros
+* Paginação
 
-Todos os testes automatizados estão passando atualmente.
+Status atual:
 
-- 64 testes executados
-- 0 falhas
-- 0 erros
-- 0 testes ignorados
+```text
+Tests run: 75
+Failures: 0
+Errors:   0
+Skipped:  0
 
-Próximas implementações:
-
-- Testes dos Controllers utilizando MockMvc.
-- Testes de integração dos principais fluxos da aplicação.
-
----
-
-# 🔐 Segurança
-
-Próximas implementações:
-
-- Implementação de Spring Security.
-- Autenticação utilizando JWT.
-- Controle de acesso baseado em perfis de usuário.
-- Gerenciamento de usuários e permissões.
-- Proteção dos endpoints autenticados.
+BUILD SUCCESS
+```
 
 ---
 
-# 🐳 Infraestrutura e Deploy
+# 📊 Qualidade de código
 
-Melhorias planejadas:
+### JaCoCo
 
-- Migrar banco H2 para PostgreSQL.
-- Configurar ambiente utilizando Docker.
-- Criar Dockerfile da aplicação.
-- Utilizar Docker Compose para subir aplicação e banco.
-- Preparar deploy em ambiente cloud.
+Utilizado para gerar relatórios de cobertura dos testes automatizados.
 
----
+### SonarCloud
 
-# 🚀 Próximos Passos
+Utilizado para análise estática do código e acompanhamento da qualidade do projeto.
 
-- Implementar autenticação e autorização utilizando Spring Security e JWT.
-- Adicionar gerenciamento de usuários.
-- Implementar testes dos Controllers utilizando MockMvc.
-- Implementar testes de integração.
-- Melhorar documentação da autenticação no Swagger.
-- Implementar histórico de movimentações de estoque.
-- Melhorar logs da aplicação.
-- Expandir CI/CD utilizando GitHub Actions.
-- Preparar deploy da API.
+```text
+Código
+  ↓
+Testes
+  ↓
+JaCoCo
+  ↓
+SonarCloud
+```
 
 ---
 
-# 🎯 Objetivo Profissional
+# 🐳 Docker
 
-Este projeto foi desenvolvido com o objetivo de aplicar conhecimentos utilizados no desenvolvimento backend profissional, incluindo:
+O PostgreSQL pode ser executado utilizando **Docker Compose**, evitando a necessidade de instalar e configurar o banco manualmente.
 
-- Construção de APIs REST.
-- Arquitetura em camadas.
-- Desenvolvimento com Spring Boot.
-- Persistência utilizando JPA/Hibernate.
-- Modelagem de banco de dados relacional.
-- Aplicação de regras de negócio.
-- Tratamento de exceções.
-- Boas práticas de organização de código.
-- Desenvolvimento orientado a testes unitários.
+Estrutura:
+
+```text
+Docker Compose
+      │
+      ▼
+PostgreSQL 17
+      │
+      ├── supermarket
+      │
+      └── supermarket_test
+```
+
+Porta utilizada localmente:
+
+```text
+localhost:5433
+```
 
 ---
 
-# 👨‍💻 Autor
+# 🔄 Integração Contínua
 
-**Kelwin Ribeiro Feitosa**
+O projeto possui **GitHub Actions** configurado para executar automaticamente o pipeline de validação.
 
-Estudante de Ciência da Computação com foco em desenvolvimento backend utilizando Java e Spring Boot.
+```text
+Push / Pull Request
+        ↓
+   GitHub Actions
+        ↓
+   Java 21 + Maven
+        ↓
+    PostgreSQL
+        ↓
+      Tests
+        ↓
+     JaCoCo
+        ↓
+   SonarCloud
+```
 
-Projeto desenvolvido para estudo, prática profissional e construção de portfólio.
+O pipeline verifica se a aplicação continua compilando, se os testes passam e se o relatório de cobertura é gerado corretamente.
+
+---
+
+# 📚 Documentação da API
+
+A API utiliza **Swagger / OpenAPI** para documentação e exploração dos endpoints.
+
+Após iniciar a aplicação:
+
+```text
+Swagger UI
+http://localhost:8080/swagger-ui.html
+```
+
+Documentação OpenAPI:
+
+```text
+http://localhost:8080/v3/api-docs
+```
+
+---
+
+# 🛠️ Tecnologias
+
+<div align="center">
+
+### ☕ Backend
+
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge\&logo=openjdk\&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-6DB33F?style=for-the-badge\&logo=springboot\&logoColor=white)
+![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=for-the-badge\&logo=spring\&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge\&logo=hibernate\&logoColor=white)
+![Validation](https://img.shields.io/badge/Jakarta%20Validation-59666C?style=for-the-badge)
+
+### 🗄️ Banco de Dados
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-316192?style=for-the-badge\&logo=postgresql\&logoColor=white)
+![Flyway](https://img.shields.io/badge/Flyway-CC0200?style=for-the-badge\&logo=flyway\&logoColor=white)
+
+### 🧪 Testes e Qualidade
+
+![JUnit](https://img.shields.io/badge/JUnit%205-25A162?style=for-the-badge\&logo=junit5\&logoColor=white)
+![Mockito](https://img.shields.io/badge/Mockito-78A641?style=for-the-badge)
+![JaCoCo](https://img.shields.io/badge/JaCoCo-Coverage-EF2D5E?style=for-the-badge)
+![SonarCloud](https://img.shields.io/badge/SonarCloud-F3702A?style=for-the-badge\&logo=sonarcloud\&logoColor=white)
+
+### 🐳 Infraestrutura e Ferramentas
+
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge\&logo=githubactions\&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge\&logo=apachemaven\&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge\&logo=git\&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge\&logo=linux\&logoColor=black)
+
+</div>
+
+---
+
+# ⚙️ Como executar
+
+## Pré-requisitos
+
+* Java 21
+* Docker
+* Docker Compose
+* Git
+
+## 1. Clone o projeto
+
+```bash
+git clone https://github.com/kelwin-feitosa/supermarket-management-api.git
+
+cd supermarket-management-api
+```
+
+## 2. Inicie o PostgreSQL
+
+```bash
+docker compose up -d
+```
+
+O Docker irá iniciar o PostgreSQL e disponibilizar o banco na porta:
+
+```text
+5433
+```
+
+## 3. Execute a aplicação
+
+Linux/macOS:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Windows:
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+A aplicação estará disponível em:
+
+```text
+http://localhost:8080
+```
+
+## 4. Execute os testes
+
+```bash
+./mvnw clean verify
+```
+
+---
+
+# 📡 Principais endpoints
+
+| Recurso         | Endpoint        | Operações      |
+| --------------- | --------------- | -------------- |
+| 🏷️ Categorias  | `/categorias`   | CRUD           |
+| 🛍️ Produtos    | `/produtos`     | CRUD + filtros |
+| 👤 Clientes     | `/clientes`     | CRUD + filtros |
+| 🏭 Fornecedores | `/fornecedores` | CRUD + filtros |
+| 🛒 Carrinho     | `/carrinhos`    | Gerenciamento  |
+| 🚚 Compras      | `/compras`      | CRUD + filtros |
+| 🧾 Vendas       | `/vendas`       | CRUD + filtros |
+
+> A criação do carrinho acontece automaticamente durante o cadastro do cliente.
+
+---
+
+# 📁 Estrutura de domínio
+
+```text
+                    ┌─────────────┐
+                    │  Categoria  │
+                    └──────┬──────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │   Produto   │
+                    └──────┬──────┘
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+       ┌─────────────┐           ┌─────────────┐
+       │  Carrinho   │           │    Venda    │
+       └──────┬──────┘           └──────┬──────┘
+              │                         │
+              ▼                         ▼
+       ItemCarrinho                ItemVenda
+                                         │
+                                         ▼
+                                      Produto
+
+                    ┌─────────────┐
+                    │ Fornecedor  │
+                    └──────┬──────┘
+                           │
+                           ▼
+                       ┌────────┐
+                       │ Compra │
+                       └────┬───┘
+                            │
+                            ▼
+                        ItemCompra
+```
+
+---
+
+# 🔗 Repositório
+
+<div align="center">
+
+[![GitHub](https://img.shields.io/badge/GitHub-Supermarket%20Management%20API-181717?style=for-the-badge\&logo=github)](https://github.com/kelwin-feitosa/supermarket-management-api)
+
+</div>
+
+---
+
+# 🚧 Próximos passos
+
+O projeto continua em evolução.
+
+### 🔐 Segurança
+
+* Spring Security
+* JWT
+* BCrypt
+* Autenticação e autorização
+* Controle de acesso por perfil
+
+### 🧪 Testes
+
+* Testes de Controllers com MockMvc
+* Testes de integração
+* Testcontainers
+
+### 📈 Evolução da aplicação
+
+* Histórico detalhado de estoque
+* Logs estruturados
+* Melhorias de observabilidade
+* Dockerfile da aplicação
+* Pipeline de deploy
+* Deploy em ambiente cloud
+* Integração com Inteligência Artificial
+* Evolução futura para arquitetura distribuída
+
+---
+
+# 🎯 Objetivo profissional
+
+Este projeto faz parte da minha evolução como **desenvolvedor backend Java**.
+
+Meu objetivo é continuar aprofundando conhecimentos em:
+
+```text
+Java
+  ↓
+Spring Boot
+  ↓
+APIs REST
+  ↓
+Persistência
+  ↓
+Testes
+  ↓
+Docker
+  ↓
+CI/CD
+  ↓
+Segurança
+  ↓
+Arquitetura
+  ↓
+Cloud & IA
+```
+
+---
+
+<div align="center">
+
+## 👨‍💻 Desenvolvido por Kelwin Ribeiro Feitosa
+
+🎓 Ciência da Computação
+💻 Backend Java / Spring Boot
+
+<br>
+
+[![GitHub](https://img.shields.io/badge/GitHub-Kelwin%20Feitosa-181717?style=for-the-badge\&logo=github)](https://github.com/kelwin-feitosa)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Kelwin%20Feitosa-0A66C2?style=for-the-badge\&logo=linkedin\&logoColor=white)](https://www.linkedin.com/in/kelwinfeitosa)
+
+<br>
+
+### ☕ Transformando café em código.
+
+</div>
