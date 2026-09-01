@@ -27,7 +27,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/fornecedores")
 @Tag(
@@ -37,10 +39,6 @@ import jakarta.validation.Valid;
 public class FornecedorController {
 
     private final FornecedorService service;
-
-    public FornecedorController(FornecedorService service) {
-        this.service = service;
-    }
     
     @Operation(
         summary = "Listar fornecedores",

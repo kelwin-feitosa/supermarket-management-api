@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/produtos")
 @Tag(
@@ -38,10 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProdutoController {
     
     private final ProdutoService service;
-
-    public ProdutoController(ProdutoService service) {
-        this.service = service;
-    }
 
     @Operation(
         summary = "Listar produtos",

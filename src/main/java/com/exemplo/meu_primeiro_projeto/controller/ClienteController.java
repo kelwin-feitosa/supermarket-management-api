@@ -27,7 +27,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/clientes")
 @Tag(
@@ -37,10 +39,6 @@ import jakarta.validation.Valid;
 public class ClienteController {
 
     private final ClienteService service;
-
-    public ClienteController(ClienteService service) {
-        this.service = service;
-    }
 
     @Operation(
         summary = "Listar clientes",
@@ -85,7 +83,7 @@ public class ClienteController {
 
     @Operation(
         summary = "Cadastrar cliente",
-        description = "Cadastra um novo cliente no sistema."
+        description = "Cadastra um novo cliente no sistema e cria automaticamente seu carrinho."
     )
     @ApiResponses({
         @ApiResponse(

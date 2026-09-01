@@ -22,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/vendas")
 @Tag(
@@ -32,10 +34,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class VendaController {
 
     private final VendaService service;
-
-    public VendaController(VendaService service) {
-        this.service = service;
-    }
 
     @Operation(
         summary = "Realizar venda",

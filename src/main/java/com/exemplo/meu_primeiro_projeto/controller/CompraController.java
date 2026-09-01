@@ -26,8 +26,9 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/compras")
 @Tag(
@@ -35,11 +36,8 @@ import org.springframework.web.bind.annotation.RequestBody;
     description = "Operações relacionadas ao gerenciamento de compras."
 )
 public class CompraController {
-    private final CompraService compraService;
     
-    public CompraController(CompraService compraService) {
-        this.compraService = compraService;
-    }
+    private final CompraService compraService;
 
     @Operation(
         summary = "Realizar compra",
