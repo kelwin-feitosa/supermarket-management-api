@@ -17,19 +17,15 @@ import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ProdutoRepository;
 import com.exemplo.meu_primeiro_projeto.repository.specification.ProdutoSpecification;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProdutoService {
     
     private final ProdutoRepository repository;
     private final CategoriaRepository categoriaRepository;
     private final ProdutoMapper mapper;
-    
-    public ProdutoService(ProdutoRepository repository, CategoriaRepository categoriaRepository, ProdutoMapper mapper) {
-        this.repository = repository;
-        this.categoriaRepository = categoriaRepository;
-        this.mapper = mapper;
-    }
-
 
     public Page<ProdutoResponse> listarProdutos(ProdutoFiltro filtro, Pageable pageable) {
         return repository.findAll(ProdutoSpecification.comFiltro(filtro), pageable)

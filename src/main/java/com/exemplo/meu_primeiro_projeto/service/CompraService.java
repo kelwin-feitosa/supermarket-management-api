@@ -24,8 +24,10 @@ import com.exemplo.meu_primeiro_projeto.model.Produto;
 import com.exemplo.meu_primeiro_projeto.repository.CompraRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CompraService {
 
     private final FornecedorRepository fornecedorRepository;
@@ -34,15 +36,6 @@ public class CompraService {
     private final CalculoPrecoService calculoPrecoService;
     private final ProdutoRepository produtoRepository;
     private final CompraMapper mapper;
-
-    public CompraService(CompraRepository compraRepository, EstoqueService estoqueService, CalculoPrecoService calculoPrecoService, FornecedorRepository fornecedorRepository, ProdutoRepository produtoRepository, CompraMapper mapper) {
-        this.compraRepository = compraRepository;
-        this.estoqueService = estoqueService;
-        this.calculoPrecoService = calculoPrecoService;
-        this.fornecedorRepository = fornecedorRepository;
-        this.produtoRepository = produtoRepository;
-        this.mapper = mapper;
-    }
 
     @Transactional
     public CompraResponse realizarCompra(CompraRequest request) {

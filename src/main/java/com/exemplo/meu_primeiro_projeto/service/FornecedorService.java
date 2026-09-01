@@ -14,16 +14,14 @@ import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
 import com.exemplo.meu_primeiro_projeto.repository.specification.FornecedorSpecification;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class FornecedorService {
 
     private final FornecedorRepository repository;
     private final FornecedorMapper mapper;
-
-    public FornecedorService(FornecedorRepository repository, FornecedorMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     public Page<FornecedorResponse> listarFornecedores(FornecedorFiltro filtro, Pageable pageable) {
         return repository.findAll(FornecedorSpecification.comFiltro(filtro), pageable)

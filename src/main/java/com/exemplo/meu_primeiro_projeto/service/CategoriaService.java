@@ -15,15 +15,13 @@ import com.exemplo.meu_primeiro_projeto.model.Categoria;
 import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
 import com.exemplo.meu_primeiro_projeto.repository.specification.CategoriaSpecification;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CategoriaService {
     private final CategoriaRepository repository;
     private final CategoriaMapper mapper;
-
-    public CategoriaService(CategoriaRepository repository, CategoriaMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     public Page<CategoriaResponse> listarCategorias(CategoriaFiltro filtro, Pageable pageable) {
         return repository.findAll(CategoriaSpecification.comFiltro(filtro), pageable)

@@ -19,23 +19,17 @@ import com.exemplo.meu_primeiro_projeto.repository.VendaRepository;
 import com.exemplo.meu_primeiro_projeto.repository.specification.VendaSpecification;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
+@RequiredArgsConstructor
 public class VendaService {
     private final VendaRepository vendaRepository;
     private final CarrinhoRepository carrinhoRepository;
     private final EstoqueService estoqueService;
     private final CalculoPrecoService calculoPrecoService;
     private final VendaMapper mapper;
-
-    public VendaService(VendaRepository vendaRepository, CarrinhoRepository carrinhoRepository, EstoqueService estoqueService, CalculoPrecoService calculoPrecoService, VendaMapper mapper) {
-        this.vendaRepository = vendaRepository;
-        this.carrinhoRepository = carrinhoRepository;
-        this.estoqueService = estoqueService;
-        this.calculoPrecoService = calculoPrecoService;
-        this.mapper = mapper;
-    }
 
     @Transactional
     public VendaResponse realizarVenda(Long idCarrinho) {
