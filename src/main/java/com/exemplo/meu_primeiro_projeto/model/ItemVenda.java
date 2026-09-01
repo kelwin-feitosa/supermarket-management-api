@@ -15,10 +15,10 @@ public class ItemVenda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Produto produto;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Venda venda;
 
     private Integer quantidade;

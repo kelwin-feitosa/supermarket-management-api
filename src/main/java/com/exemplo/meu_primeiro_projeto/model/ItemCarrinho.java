@@ -15,10 +15,10 @@ public class ItemCarrinho {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Carrinho carrinho;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Produto produto;
 
     private Integer quantidade;
