@@ -21,9 +21,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.PutMapping;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/carrinhos")
 @Tag(
@@ -31,41 +33,8 @@ import org.springframework.web.bind.annotation.PutMapping;
     description = "Operações relacionadas ao gerenciamento de carrinhos."
 )
 public class CarrinhoController {
+
     private final CarrinhoService service;
-    
-    public CarrinhoController(CarrinhoService service) {
-        this.service = service;
-    }
-
-    @Operation(
-        summary = "Criar carrinho",
-        description = "Cria um novo carrinho para um cliente."
-    )
-    @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Carrinho criado com sucesso"),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Cliente informado não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Cliente já possui um carrinho cadastrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        )
-    })
-    @PostMapping("/{idCliente}")
-    public ResponseEntity<CarrinhoResponse> criarCarrinho(@PathVariable Long idCliente) {
-        CarrinhoResponse resposta = service.criarCarrinho(idCliente);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
-    }
 
     @Operation(
         summary = "Adicionar item ao carrinho",
