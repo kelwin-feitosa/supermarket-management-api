@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.exemplo.meu_primeiro_projeto.dto.filter.ProdutoFiltro;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
@@ -17,6 +19,8 @@ import com.exemplo.meu_primeiro_projeto.repository.CategoriaRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ProdutoRepository;
 
 @DataJpaTest
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProdutoSpecificationTest {
 
     @Autowired
