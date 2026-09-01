@@ -17,7 +17,7 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          # As credenciais e nome do banco são intencionais, usado para teste
+          # As credenciais e nome do banco são intencionais, usados para teste
           POSTGRES_DB: supermarket
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -46,8 +46,15 @@ jobs:
         run: |
           pg_isready -h localhost -p 5433 -U postgres -d supermarket
 
-      - name: Executar testes e gerar cobertura
-        run: ./mvnw clean verify
+      - name: Criar banco de testes
+        run: |
+          PGPASSWORD=postgres psql \
+            -h localhost \
+            -p 5433 \
+            -U postgres \
+            -d postgres \
+            -c "CREATE DATABASE supermarket_test;"
+
       - name: Executar testes e gerar cobertura
         run: ./mvnw clean verify
 
