@@ -29,7 +29,9 @@ import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.mapper.ClienteMapper;
+import com.exemplo.meu_primeiro_projeto.model.Carrinho;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
+import com.exemplo.meu_primeiro_projeto.repository.CarrinhoRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,8 +46,12 @@ public class ClienteServiceTest {
     @Mock
     private ClienteFiltro filtro;
 
+    @Mock
+    private CarrinhoRepository carrinhoRepository;
+
     @InjectMocks
     private ClienteService service;
+
 
     @Test
     void criarCliente_deveCriarComSucesso() {
@@ -62,6 +68,9 @@ public class ClienteServiceTest {
         when(repository.save(any(Cliente.class)))
             .thenReturn(cliente);
 
+        when(carrinhoRepository.save(any(Carrinho.class)))
+            .thenAnswer(invocation -> invocation.getArgument(0));
+
         when(mapper.toResponse(cliente))
             .thenReturn(response);
 
@@ -70,10 +79,12 @@ public class ClienteServiceTest {
         assertEquals(request.nome(), resposta.nome());
         assertEquals(request.email(), resposta.email());
         assertEquals(request.telefone(), resposta.telefone());
+        assertEquals(cliente, cliente.getCarrinho().getCliente());
 
         verify(repository).existsByEmail(request.email());
         verify(mapper).toEntity(request);
         verify(repository).save(any(Cliente.class));
+        verify(carrinhoRepository).save(any(Carrinho.class));
         verify(mapper).toResponse(cliente);
     }
 
