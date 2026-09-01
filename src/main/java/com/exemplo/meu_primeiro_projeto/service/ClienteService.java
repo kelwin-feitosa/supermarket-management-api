@@ -10,20 +10,21 @@ import com.exemplo.meu_primeiro_projeto.dto.response.ClienteResponse;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.mapper.ClienteMapper;
+import com.exemplo.meu_primeiro_projeto.model.Carrinho;
 import com.exemplo.meu_primeiro_projeto.model.Cliente;
+import com.exemplo.meu_primeiro_projeto.repository.CarrinhoRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ClienteRepository;
 import com.exemplo.meu_primeiro_projeto.repository.specification.ClienteSpecification;
 
+import lombok.RequiredArgsConstructor;
+
 @Service    
+@RequiredArgsConstructor
 public class ClienteService {
 
     private final ClienteRepository repository;
     private final ClienteMapper mapper;
-
-    public ClienteService(ClienteRepository repository, ClienteMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
+    private final CarrinhoRepository carrinhoRepository;
 
     public Page<ClienteResponse> listarClientes(ClienteFiltro filtro, Pageable pageable) {
         return repository.findAll(ClienteSpecification.comFiltro(filtro), pageable)
@@ -38,6 +39,10 @@ public class ClienteService {
         verificarDuplicidade(request);
 
         Cliente clienteSalvo = repository.save(mapper.toEntity(request));
+
+        Carrinho carrinho = new Carrinho(clienteSalvo);
+        clienteSalvo.setCarrinho(carrinho);
+        carrinhoRepository.save(carrinho);
 
         return mapper.toResponse(clienteSalvo);
     }
