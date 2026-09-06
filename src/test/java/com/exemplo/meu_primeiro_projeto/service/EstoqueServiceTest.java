@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.exemplo.meu_primeiro_projeto.exception.EstoqueInsuficienteException;
 import com.exemplo.meu_primeiro_projeto.model.Produto;
 
-public class EstoqueServiceTest {
+class EstoqueServiceTest {
 
     private final EstoqueService service = new EstoqueService();
 

@@ -34,7 +34,7 @@ import com.exemplo.meu_primeiro_projeto.model.Fornecedor;
 import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class FornecedorServiceTest {
+class FornecedorServiceTest {
 
     @Mock
     private FornecedorRepository repository;

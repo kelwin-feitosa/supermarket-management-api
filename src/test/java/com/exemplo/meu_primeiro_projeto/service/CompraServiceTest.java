@@ -43,7 +43,7 @@ import com.exemplo.meu_primeiro_projeto.repository.FornecedorRepository;
 import com.exemplo.meu_primeiro_projeto.repository.ProdutoRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class CompraServiceTest {
+class CompraServiceTest {
     @Mock
     CompraRepository compraRepository;
 

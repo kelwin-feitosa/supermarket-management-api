@@ -11,7 +11,7 @@ import com.exemplo.meu_primeiro_projeto.model.ItemCarrinho;
 import com.exemplo.meu_primeiro_projeto.model.ItemCompra;
 import com.exemplo.meu_primeiro_projeto.model.ItemVenda;
 
-public class CalculoPrecoServiceTest {
+class CalculoPrecoServiceTest {
 
     private final CalculoPrecoService service = new CalculoPrecoService();
 

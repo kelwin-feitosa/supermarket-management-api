@@ -36,7 +36,7 @@ import com.exemplo.meu_primeiro_projeto.repository.CarrinhoRepository;
 import com.exemplo.meu_primeiro_projeto.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class UsuarioServiceTest {
+class UsuarioServiceTest {
 
     @Mock
     private UsuarioRepository repository;

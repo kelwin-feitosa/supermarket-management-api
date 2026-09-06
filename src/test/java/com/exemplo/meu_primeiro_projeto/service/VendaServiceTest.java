@@ -44,7 +44,7 @@ import com.exemplo.meu_primeiro_projeto.repository.CarrinhoRepository;
 import com.exemplo.meu_primeiro_projeto.repository.VendaRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class VendaServiceTest {
+class VendaServiceTest {
 
     @Mock
     VendaRepository vendaRepository;
