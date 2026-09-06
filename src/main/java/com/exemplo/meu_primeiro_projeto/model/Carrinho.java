@@ -20,8 +20,8 @@ public class Carrinho {
     private Long id;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "cliente_id", unique = true)
-    private Cliente cliente;
+    @JoinColumn(name = "usuario_id", unique = true)
+    private Usuario usuario;
 
     @OneToMany(
     mappedBy = "carrinho",
@@ -32,8 +32,8 @@ public class Carrinho {
 
     protected Carrinho() { }
 
-    public Carrinho(Cliente cliente) {
-        this.cliente = cliente;
+    public Carrinho(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public void adicionarItem(ItemCarrinho item) {
@@ -46,8 +46,8 @@ public class Carrinho {
     public void setId(Long id) { this.id = id; }
 
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     public List<ItemCarrinho> getItens() { return itens; }
     public void setItens(List<ItemCarrinho> itens) { this.itens = itens; }

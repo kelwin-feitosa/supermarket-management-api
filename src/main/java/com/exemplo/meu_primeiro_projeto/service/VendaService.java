@@ -39,7 +39,7 @@ public class VendaService {
         }
 
         Venda venda = new Venda(
-            carrinho.getCliente()
+            carrinho.getUsuario()
         );
 
         for(ItemCarrinho itemcarrinho : carrinho.getItens()) {

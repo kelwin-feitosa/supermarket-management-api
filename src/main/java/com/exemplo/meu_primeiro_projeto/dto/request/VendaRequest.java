@@ -7,11 +7,11 @@ import jakarta.validation.constraints.NotNull;
 public record VendaRequest(
 
     @Schema(
-        description = "Identificador do cliente responsável pela venda.",
+        description = "Identificador do usuario responsável pela venda.",
         example = "1"
     )
-    @NotNull(message = "O cliente é obrigatório.")
-    Long clienteId
+    @NotNull(message = "O usuario é obrigatório.")
+    Long usuarioId
 
 ) {
 }

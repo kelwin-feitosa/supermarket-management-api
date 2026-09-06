@@ -1,7 +1,7 @@
 package com.exemplo.meu_primeiro_projeto.dto.response;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -26,7 +26,7 @@ public record ProdutoResponse(
     Long categoriaId,
 
     @Schema(description = "Data e hora de cadastro do produto")
-    LocalDateTime dataCadastro
+    OffsetDateTime dataCadastro
 
 ) {
 }

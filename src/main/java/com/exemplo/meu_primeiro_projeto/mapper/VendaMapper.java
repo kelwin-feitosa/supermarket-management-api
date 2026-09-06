@@ -20,7 +20,7 @@ public class VendaMapper {
 
         return new VendaResponse(
                 venda.getId(),
-                venda.getCliente().getId(),
+                venda.getUsuario().getId(),
                 venda.getDataVenda(),
                 venda.getValorTotal(),
                 itens

@@ -35,7 +35,7 @@ import com.exemplo.meu_primeiro_projeto.exception.VendaNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.mapper.VendaMapper;
 import com.exemplo.meu_primeiro_projeto.model.Carrinho;
 import com.exemplo.meu_primeiro_projeto.model.Categoria;
-import com.exemplo.meu_primeiro_projeto.model.Cliente;
+import com.exemplo.meu_primeiro_projeto.model.Usuario;
 import com.exemplo.meu_primeiro_projeto.model.ItemCarrinho;
 import com.exemplo.meu_primeiro_projeto.model.ItemVenda;
 import com.exemplo.meu_primeiro_projeto.model.Produto;
@@ -95,7 +95,7 @@ public class VendaServiceTest {
 
         VendaResponse resposta = service.realizarVenda(carrinho.getId());
 
-        assertEquals(carrinho.getCliente().getId(), resposta.clienteId());
+        assertEquals(carrinho.getUsuario().getId(), resposta.usuarioId());
         assertEquals(precoTotalVenda, resposta.valorTotal());
         assertEquals(quantidadeItens, resposta.itens().size());
 
@@ -112,7 +112,7 @@ public class VendaServiceTest {
     @Test
     void realizarVenda_deveLancarExcecaoQuandoCarrinhoEstiverVazio() {
 
-        Carrinho carrinho = new Carrinho(criarClientePadrao());
+        Carrinho carrinho = new Carrinho(criarUsuarioPadrao());
         carrinho.setId(1L);
 
         Long carrinhoId = carrinho.getId();
@@ -166,7 +166,7 @@ public class VendaServiceTest {
         VendaResponse resposta = service.buscarVenda(venda.getId());
 
         assertEquals(venda.getId(), resposta.id());
-        assertEquals(venda.getCliente().getId(), resposta.clienteId());
+        assertEquals(venda.getUsuario().getId(), resposta.usuarioId());
         assertEquals(venda.getValorTotal(), resposta.valorTotal());
         assertEquals(venda.getItens().size(), resposta.itens().size());
 
@@ -213,7 +213,7 @@ public class VendaServiceTest {
 
         VendaResponse response2 = new VendaResponse(
             venda2.getId(),
-            venda2.getCliente().getId(),
+            venda2.getUsuario().getId(),
             venda2.getDataVenda(),
             venda2.getValorTotal(),
             List.of(itemResponse2)
@@ -259,16 +259,16 @@ public class VendaServiceTest {
     }
 
 
-    private Cliente criarClientePadrao() {
-        Cliente cliente = new Cliente(
+    private Usuario criarUsuarioPadrao() {
+        Usuario usuario = new Usuario(
             "João Silva",
             "joao@email.com",
             "61999999999"
         );
 
-        cliente.setId(1L);
+        usuario.setId(1L);
 
-        return cliente;
+        return usuario;
     }
 
     private Categoria criarCategoriaPadrao() {
@@ -298,7 +298,7 @@ public class VendaServiceTest {
 
     private Carrinho criarCarrinhoPadrao() {
         Carrinho carrinho = new Carrinho(
-            criarClientePadrao()
+            criarUsuarioPadrao()
         );
 
         carrinho.setId(1L);
@@ -324,7 +324,7 @@ public class VendaServiceTest {
 
     private Venda criarVendaPadrao() {
         Venda venda = new Venda(
-            criarClientePadrao()
+            criarUsuarioPadrao()
         );
 
         venda.setId(1L);
@@ -366,7 +366,7 @@ public class VendaServiceTest {
 
         return new VendaResponse(
             venda.getId(),
-            venda.getCliente().getId(),
+            venda.getUsuario().getId(),
             venda.getDataVenda(),
             venda.getValorTotal(),
             List.of(itemResponse)

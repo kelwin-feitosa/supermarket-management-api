@@ -2,6 +2,7 @@ package com.exemplo.meu_primeiro_projeto.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.exemplo.meu_primeiro_projeto.util.DataHoraUtil;
 
@@ -26,7 +27,7 @@ public class Produto {
     private BigDecimal preco;
     private String descricao;
     private Integer quantidadeEstoque;
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
     protected Produto() {}
 
@@ -70,6 +71,6 @@ public class Produto {
     public Integer getQuantidadeEstoque() { return quantidadeEstoque; }
     public void setQuantidadeEstoque(Integer quantidadeEstoque) { this.quantidadeEstoque = quantidadeEstoque; }
 
-    public LocalDateTime getDataCadastro() { return this.dataCadastro; }
+    public OffsetDateTime getDataCadastro() { return this.dataCadastro; }
 
 }

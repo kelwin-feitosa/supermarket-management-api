@@ -2,6 +2,7 @@ package com.exemplo.meu_primeiro_projeto.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Venda { //A venda feita pro cliente
     private Long id;
 
     @ManyToOne
-    private Cliente cliente;
+    private Usuario usuario;
 
     @OneToMany(
     mappedBy = "venda",
@@ -33,13 +34,13 @@ public class Venda { //A venda feita pro cliente
     )
     private List<ItemVenda> itens = new ArrayList<>();
 
-    private LocalDateTime dataVenda;
+    private OffsetDateTime dataVenda;
     private BigDecimal valorTotal;
 
     protected Venda() {}
 
-    public Venda(Cliente cliente) {
-        this.cliente = cliente;
+    public Venda(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @PrePersist
@@ -55,13 +56,13 @@ public class Venda { //A venda feita pro cliente
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     public List<ItemVenda> getItens() { return itens; }
     public void setItens(List<ItemVenda> itens) { this.itens = itens; }
 
-    public LocalDateTime getDataVenda() { return dataVenda; }
+    public OffsetDateTime getDataVenda() { return dataVenda; }
 
     public BigDecimal getValorTotal() { return valorTotal; }
     public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }

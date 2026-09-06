@@ -1,7 +1,7 @@
 package com.exemplo.meu_primeiro_projeto.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class Compra {  //Representando as compras feitas com o fornecedor
     )
     private List<ItemCompra> itens = new ArrayList<>();
 
-    private LocalDateTime dataCompra;
+    private OffsetDateTime dataCompra;
     private BigDecimal valorTotal;
 
     protected Compra() {}
@@ -60,7 +60,7 @@ public class Compra {  //Representando as compras feitas com o fornecedor
 
     public List<ItemCompra> getItens() { return itens; }
 
-    public LocalDateTime getDataCompra() { return dataCompra; }
+    public OffsetDateTime getDataCompra() { return dataCompra; }
 
     public BigDecimal getValorTotal() { return valorTotal; }
     public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }

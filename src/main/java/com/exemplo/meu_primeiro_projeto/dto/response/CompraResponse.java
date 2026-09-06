@@ -1,7 +1,7 @@
 package com.exemplo.meu_primeiro_projeto.dto.response;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +15,7 @@ public record CompraResponse(
     Long fornecedorId,
 
     @Schema(description = "Data e horário em que a compra foi realizada", example = "2026-07-27T14:30:00")
-    LocalDateTime dataCompra,
+    OffsetDateTime dataCompra,
 
     @Schema(description = "Valor total da compra", example = "2500.00")
     BigDecimal valorTotal,
