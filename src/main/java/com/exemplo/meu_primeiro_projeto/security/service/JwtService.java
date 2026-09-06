@@ -1,5 +1,6 @@
 package com.exemplo.meu_primeiro_projeto.security.service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -9,15 +10,21 @@ import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.exemplo.meu_primeiro_projeto.config.JwtProperties;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Service 
 public class JwtService {
 
-    private final SecretKey secretKey = Keys.hmacShaKeyFor(
-        "uma-chave-secreta-muito-grande-para-o-nosso-projeto".getBytes()
-    );
+    private final SecretKey secretKey;
+
+    public JwtService(JwtProperties properties) {
+        this.secretKey = Keys.hmacShaKeyFor(
+            properties.secret().getBytes(StandardCharsets.UTF_8)
+        );
+    }
 
     private final Duration expiration = Duration.ofHours(1);
 
