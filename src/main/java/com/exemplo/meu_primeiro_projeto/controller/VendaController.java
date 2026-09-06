@@ -1,5 +1,13 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,17 +20,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -41,31 +39,31 @@ public class VendaController {
         summary = "Realizar venda",
         description = "Finaliza uma venda utilizando os produtos presentes em um carrinho."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "201",
-            description = "Venda realizada com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Carrinho vazio ou estoque insuficiente",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Carrinho não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "201",
+        description = "Venda realizada com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Carrinho vazio ou estoque insuficiente",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Carrinho não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PreAuthorize("hasRole('CASHIER')")
     @PostMapping("{idCarrinho}")
-    public ResponseEntity<VendaResponse> realizarVenda(@PathVariable Long idCarrinho) {
+    public ResponseEntity<VendaResponse> realizarVenda(
+            @PathVariable Long idCarrinho) {
+
         return ResponseEntity.ok(service.realizarVenda(idCarrinho));
     }
 
@@ -73,23 +71,23 @@ public class VendaController {
         summary = "Buscar venda por ID",
         description = "Busca uma venda pelo identificador informado."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Venda encontrada"
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Venda não encontrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Venda encontrada"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Venda não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @PreAuthorize("hasAnyRole('STOCK_MANAGER')")
     @GetMapping("{idVenda}")
-    public ResponseEntity<VendaResponse> buscarVenda(@PathVariable Long idVenda) {
+    public ResponseEntity<VendaResponse> buscarVenda(
+            @PathVariable Long idVenda) {
+
         return ResponseEntity.ok(service.buscarVenda(idVenda));
     }
 
@@ -97,12 +95,10 @@ public class VendaController {
         summary = "Listar vendas",
         description = "Lista as vendas realizadas no sistema, permitindo filtragem e paginação."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Vendas listadas com sucesso"
-        )
-    })
+    @ApiResponse(
+        responseCode = "200",
+        description = "Vendas listadas com sucesso"
+    )
     @PreAuthorize("hasRole('STOCK_MANAGER')")
     @GetMapping
     public ResponseEntity<Page<VendaResponse>> listarVendas(
@@ -111,5 +107,4 @@ public class VendaController {
 
         return ResponseEntity.ok(service.listarVendas(filtro, pageable));
     }
-
 }

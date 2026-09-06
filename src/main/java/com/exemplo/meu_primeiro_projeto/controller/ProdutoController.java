@@ -1,21 +1,5 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import com.exemplo.meu_primeiro_projeto.dto.filter.ProdutoFiltro;
-import com.exemplo.meu_primeiro_projeto.dto.request.ProdutoRequest;
-import com.exemplo.meu_primeiro_projeto.dto.response.ProdutoResponse;
-import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
-import com.exemplo.meu_primeiro_projeto.service.ProdutoService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,6 +13,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.exemplo.meu_primeiro_projeto.dto.filter.ProdutoFiltro;
+import com.exemplo.meu_primeiro_projeto.dto.request.ProdutoRequest;
+import com.exemplo.meu_primeiro_projeto.dto.response.ProdutoResponse;
+import com.exemplo.meu_primeiro_projeto.exception.RespostaErro;
+import com.exemplo.meu_primeiro_projeto.service.ProdutoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -39,7 +37,7 @@ import lombok.RequiredArgsConstructor;
     description = "Operações relacionadas ao gerenciamento de produtos."
 )
 public class ProdutoController {
-    
+
     private final ProdutoService service;
 
     @Operation(
@@ -53,12 +51,10 @@ public class ProdutoController {
         - sort: campo e direção da ordenação (ex.: nome,asc)
         """
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Produtos listados com sucesso"
-        )
-    })
+    @ApiResponse(
+        responseCode = "200",
+        description = "Produtos listados com sucesso"
+    )
     @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
     @GetMapping
     public ResponseEntity<Page<ProdutoResponse>> obterProdutos(
@@ -72,20 +68,18 @@ public class ProdutoController {
         summary = "Buscar produto por ID",
         description = "Busca um produto pelo identificador informado."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Produto encontrado"
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Produto não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Produto encontrado"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Produto não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponse> buscarPorId(@PathVariable Long id) {
@@ -96,32 +90,31 @@ public class ProdutoController {
         summary = "Cadastrar produto",
         description = "Cadastra um novo produto no sistema."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "201",
-            description = "Produto criado com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Dados enviados inválidos",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Produto já cadastrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "201",
+        description = "Produto criado com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados enviados inválidos",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Produto já cadastrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PostMapping
-    public ResponseEntity<ProdutoResponse> criarProduto(@Valid @RequestBody ProdutoRequest novoProduto) {
-        
+    public ResponseEntity<ProdutoResponse> criarProduto(
+            @Valid @RequestBody ProdutoRequest novoProduto) {
+
         ProdutoResponse response = service.criarProduto(novoProduto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -131,60 +124,59 @@ public class ProdutoController {
         summary = "Atualizar produto",
         description = "Atualiza os dados de um produto existente."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Produto atualizado com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Dados enviados inválidos",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Produto não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Produto já cadastrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Produto atualizado com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados enviados inválidos",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Produto não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Produto já cadastrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProdutoRequest produtoAtualizado) {
+    public ResponseEntity<ProdutoResponse> atualizarProduto(
+            @PathVariable Long id,
+            @Valid @RequestBody ProdutoRequest produtoAtualizado) {
+
         return ResponseEntity.ok(service.atualizarProduto(id, produtoAtualizado));
-    }   
-    
+    }
+
     @Operation(
         summary = "Excluir produto",
         description = "Remove um produto existente pelo identificador informado."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "204",
-            description = "Produto removido com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Produto não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "204",
+        description = "Produto removido com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Produto não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {

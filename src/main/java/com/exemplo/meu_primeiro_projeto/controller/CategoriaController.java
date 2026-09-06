@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/categorias")
-
 @Tag(
     name = "Categoria",
     description = "Operações relacionadas ao gerenciamento de categorias."
@@ -41,16 +39,14 @@ import lombok.RequiredArgsConstructor;
 public class CategoriaController {
 
     private final CategoriaService service;
-    
+
     @Operation(
         summary = "Listar categorias",
         description = "Lista as categorias cadastradas no sistema, permitindo filtragem e paginação."
     )
-    @ApiResponses(
-        @ApiResponse(
-            responseCode = "200",
-            description = "Categorias listadas com sucesso"
-        )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Categorias listadas com sucesso"
     )
     @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
     @GetMapping
@@ -65,17 +61,18 @@ public class CategoriaController {
         summary = "Buscar categoria por ID",
         description = "Busca uma categoria pelo identificador informado."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Categoria encontrada"),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Categoria não encontrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Categoria encontrada"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Categoria não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaResponse> buscarPorId(@PathVariable Long id) {
@@ -86,28 +83,31 @@ public class CategoriaController {
         summary = "Cadastrar categoria",
         description = "Cadastra uma nova categoria no sistema."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Categoria criada com sucesso"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Dados enviados inválidos",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Categoria já cadastrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "201",
+        description = "Categoria criada com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados enviados inválidos",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Categoria já cadastrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PostMapping
-    public ResponseEntity<CategoriaResponse> criarCategoria(@Valid @RequestBody CategoriaRequest categoriaNova) {
+    public ResponseEntity<CategoriaResponse> criarCategoria(
+            @Valid @RequestBody CategoriaRequest categoriaNova) {
+
         CategoriaResponse resposta = service.criarCategoria(categoriaNova);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
@@ -117,38 +117,39 @@ public class CategoriaController {
         summary = "Atualizar categoria",
         description = "Atualiza os dados de uma categoria existente."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Categoria atualizada com sucesso"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Dados enviados inválidos",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Categoria não encontrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Categoria já cadastrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Categoria atualizada com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados enviados inválidos",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Categoria não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Categoria já cadastrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaResponse> atualizarCategoria(
-        @PathVariable Long id, 
-        @Valid @RequestBody CategoriaRequest categoriaAtualizada) {
+            @PathVariable Long id,
+            @Valid @RequestBody CategoriaRequest categoriaAtualizada) {
 
         return ResponseEntity.ok(service.atualizarCategoria(id, categoriaAtualizada));
     }
@@ -157,17 +158,18 @@ public class CategoriaController {
         summary = "Excluir categoria",
         description = "Remove uma categoria existente pelo identificador informado."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Categoria removida com sucesso"),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Categoria não encontrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "204",
+        description = "Categoria removida com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Categoria não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
@@ -175,5 +177,4 @@ public class CategoriaController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

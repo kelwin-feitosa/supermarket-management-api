@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +19,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.PutMapping;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,30 +39,30 @@ public class CarrinhoController {
         summary = "Adicionar item ao carrinho",
         description = "Adiciona um produto ao carrinho informado."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Item adicionado ao carrinho com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Dados inválidos ou estoque insuficiente",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Carrinho ou produto não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Item adicionado ao carrinho com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados inválidos ou estoque insuficiente",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Carrinho ou produto não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PostMapping("/itens")
-    public ResponseEntity<CarrinhoResponse> adicionarItem(@Valid @RequestBody ItemCarrinhoRequest request) {
+    public ResponseEntity<CarrinhoResponse> adicionarItem(
+            @Valid @RequestBody ItemCarrinhoRequest request) {
+
         return ResponseEntity.ok(service.adicionarItem(request));
     }
 
@@ -72,30 +70,30 @@ public class CarrinhoController {
         summary = "Alterar quantidade de item",
         description = "Atualiza a quantidade de um produto já existente no carrinho."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Quantidade atualizada com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Quantidade inválida ou estoque insuficiente",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Carrinho ou item não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Quantidade atualizada com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Quantidade inválida ou estoque insuficiente",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Carrinho ou item não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
     @PutMapping("/itens")
-    public ResponseEntity<CarrinhoResponse> alterarItem(@Valid @RequestBody ItemCarrinhoRequest request) {
+    public ResponseEntity<CarrinhoResponse> alterarItem(
+            @Valid @RequestBody ItemCarrinhoRequest request) {
+
         return ResponseEntity.ok(service.alterarQuantidade(request));
     }
 
@@ -103,22 +101,22 @@ public class CarrinhoController {
         summary = "Remover item do carrinho",
         description = "Remove um produto existente do carrinho."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "204",
-            description = "Item removido com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Carrinho ou item não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "204",
+        description = "Item removido com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Carrinho ou item não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @DeleteMapping("/itens")
-    public ResponseEntity<Void> removerItem(@Valid @RequestBody ItemCarrinhoRequest request) {
+    public ResponseEntity<Void> removerItem(
+            @Valid @RequestBody ItemCarrinhoRequest request) {
+
         service.removerItem(request);
 
         return ResponseEntity.noContent().build();
@@ -128,22 +126,22 @@ public class CarrinhoController {
         summary = "Limpar carrinho",
         description = "Remove todos os itens de um carrinho existente."
     )
-    @ApiResponses({
-        @ApiResponse(
-            responseCode = "200",
-            description = "Carrinho limpo com sucesso"
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Carrinho não encontrado",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RespostaErro.class)
-            )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Carrinho limpo com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Carrinho não encontrado",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
         )
-    })
+    )
     @DeleteMapping("/{idCarrinho}")
-    public ResponseEntity<CarrinhoResponse> limparCarrinho(@PathVariable Long idCarrinho) {
+    public ResponseEntity<CarrinhoResponse> limparCarrinho(
+            @PathVariable Long idCarrinho) {
+
         CarrinhoResponse resposta = service.limparCarrinho(idCarrinho);
 
         return ResponseEntity.ok(resposta);
