@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class FornecedorController {
             description = "Fornecedores listados com sucesso"
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @GetMapping 
     public ResponseEntity<Page<FornecedorResponse>> listarFornecedores(
             @PageableDefault(size = 10, sort = "nome") Pageable pageable,
@@ -76,6 +78,7 @@ public class FornecedorController {
             )
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<FornecedorResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
@@ -107,6 +110,7 @@ public class FornecedorController {
             )
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PostMapping
     public ResponseEntity<FornecedorResponse> criarFornecedor( 
         @Valid @RequestBody FornecedorRequest request 
@@ -150,6 +154,7 @@ public class FornecedorController {
             )
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<FornecedorResponse> atualizarFornecedor(
         @PathVariable Long id, @Valid @RequestBody FornecedorRequest request
@@ -175,6 +180,7 @@ public class FornecedorController {
             )
         )
     })
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desativarFornecedor(@PathVariable Long id) {
         service.encerrarFornecedor(id);

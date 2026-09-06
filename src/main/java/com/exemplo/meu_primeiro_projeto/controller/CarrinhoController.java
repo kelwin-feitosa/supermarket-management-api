@@ -1,6 +1,7 @@
 package com.exemplo.meu_primeiro_projeto.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/carrinhos")
+@PreAuthorize("hasRole('CUSTOMER')")
 @Tag(
     name = "Carrinho",
     description = "Operações relacionadas ao gerenciamento de carrinhos."

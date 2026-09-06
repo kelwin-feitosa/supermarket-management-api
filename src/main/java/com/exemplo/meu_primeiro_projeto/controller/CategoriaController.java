@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,7 @@ public class CategoriaController {
             description = "Categorias listadas com sucesso"
         )
     )
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
     @GetMapping
     public ResponseEntity<Page<CategoriaResponse>> listarCategorias(
             CategoriaFiltro filtro,
@@ -74,6 +76,7 @@ public class CategoriaController {
             )
         )
     })
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
@@ -102,6 +105,7 @@ public class CategoriaController {
             )
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PostMapping
     public ResponseEntity<CategoriaResponse> criarCategoria(@Valid @RequestBody CategoriaRequest categoriaNova) {
         CategoriaResponse resposta = service.criarCategoria(categoriaNova);
@@ -140,6 +144,7 @@ public class CategoriaController {
             )
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaResponse> atualizarCategoria(
         @PathVariable Long id, 
@@ -163,6 +168,7 @@ public class CategoriaController {
             )
         )
     })
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
         service.deletarCategoria(id);

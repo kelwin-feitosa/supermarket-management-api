@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/vendas")
+@PreAuthorize("hasRole('MANAGER')")
 @Tag(
     name = "Venda",
     description = "Operações relacionadas ao gerenciamento de vendas."
@@ -61,6 +63,7 @@ public class VendaController {
             )
         )
     })
+    @PreAuthorize("hasRole('CASHIER')")
     @PostMapping("{idCarrinho}")
     public ResponseEntity<VendaResponse> realizarVenda(@PathVariable Long idCarrinho) {
         return ResponseEntity.ok(service.realizarVenda(idCarrinho));
@@ -84,6 +87,7 @@ public class VendaController {
             )
         )
     })
+    @PreAuthorize("hasAnyRole('STOCK_MANAGER')")
     @GetMapping("{idVenda}")
     public ResponseEntity<VendaResponse> buscarVenda(@PathVariable Long idVenda) {
         return ResponseEntity.ok(service.buscarVenda(idVenda));
@@ -99,6 +103,7 @@ public class VendaController {
             description = "Vendas listadas com sucesso"
         )
     })
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
     @GetMapping
     public ResponseEntity<Page<VendaResponse>> listarVendas(
             VendaFiltro filtro,
