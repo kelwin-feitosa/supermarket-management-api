@@ -1,7 +1,6 @@
 package com.exemplo.meu_primeiro_projeto.dto.response;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
