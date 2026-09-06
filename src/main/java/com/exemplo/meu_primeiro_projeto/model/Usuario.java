@@ -3,7 +3,11 @@ package com.exemplo.meu_primeiro_projeto.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.exemplo.meu_primeiro_projeto.enums.Role;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,31 +15,35 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Cliente {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "cliente")
+    @OneToOne(mappedBy = "usuario")
     private Carrinho carrinho;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "usuario")
     private List<Venda> vendas = new ArrayList<>();
     
     private String nome;
     private String email;
     private String telefone;
+    private String senha;
 
-    protected Cliente() {}
 
-    public Cliente(String nome, String email, String telefone) {
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.CUSTOMER;
+
+    protected Usuario() {}
+
+    public Usuario(String nome, String email, String telefone) {
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
     }
 
-    //Request para Cliente
     public void atualizar(String nome, String email, String telefone) {
         this.nome = nome;
         this.email = email;
@@ -60,4 +68,8 @@ public class Cliente {
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
 
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+
+    public Role getRole() { return role; }
 }

@@ -12,8 +12,8 @@ import com.exemplo.meu_primeiro_projeto.exception.CarrinhoVazioException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaEmUsoException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaJaExisteException;
 import com.exemplo.meu_primeiro_projeto.exception.CategoriaNaoEncontradaException;
-import com.exemplo.meu_primeiro_projeto.exception.ClienteEmailJaExisteException;
-import com.exemplo.meu_primeiro_projeto.exception.ClienteNaoEncontradoException;
+import com.exemplo.meu_primeiro_projeto.exception.UsuarioEmailJaExisteException;
+import com.exemplo.meu_primeiro_projeto.exception.UsuarioNaoEncontradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CnpjJaCadastradoException;
 import com.exemplo.meu_primeiro_projeto.exception.CompraNaoEncontradaException;
 import com.exemplo.meu_primeiro_projeto.exception.EstoqueInsuficienteException;
@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
         return resposta(HttpStatus.NOT_FOUND, "Categoria não encontrada.", ex.getMessage());
     }
 
-    @ExceptionHandler(ClienteNaoEncontradoException.class)
-    public ResponseEntity<RespostaErro> tratarClienteNaoEncontrado(ClienteNaoEncontradoException ex) {
-        return resposta(HttpStatus.NOT_FOUND, "Cliente não encontrado.", ex.getMessage());
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    public ResponseEntity<RespostaErro> tratarUsuarioNaoEncontrado(UsuarioNaoEncontradoException ex) {
+        return resposta(HttpStatus.NOT_FOUND, "Usuário não encontrado.", ex.getMessage());
     }
 
     @ExceptionHandler(FornecedorNaoEncontradoException.class)
@@ -78,8 +78,8 @@ public class GlobalExceptionHandler {
         return resposta(HttpStatus.CONFLICT, "Já existe uma categoria com esse nome.", ex.getMessage());
     }
 
-    @ExceptionHandler(ClienteEmailJaExisteException.class)
-    public ResponseEntity<RespostaErro> tratarClienteEmailJaExistente(ClienteEmailJaExisteException ex) {
+    @ExceptionHandler(UsuarioEmailJaExisteException.class)
+    public ResponseEntity<RespostaErro> tratarUsuarioEmailJaExistente(UsuarioEmailJaExisteException ex) {
         return resposta(HttpStatus.CONFLICT, "Esse email já está cadastrado.", ex.getMessage());
     }
 

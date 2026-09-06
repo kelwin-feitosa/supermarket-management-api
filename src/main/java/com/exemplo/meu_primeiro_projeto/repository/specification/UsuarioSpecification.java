@@ -2,14 +2,14 @@ package com.exemplo.meu_primeiro_projeto.repository.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.exemplo.meu_primeiro_projeto.dto.filter.ClienteFiltro;
-import com.exemplo.meu_primeiro_projeto.model.Cliente;
+import com.exemplo.meu_primeiro_projeto.dto.filter.UsuarioFiltro;
+import com.exemplo.meu_primeiro_projeto.model.Usuario;
 
-public class ClienteSpecification {
+public class UsuarioSpecification {
 
-    private ClienteSpecification() {}
+    private UsuarioSpecification() {}
 
-    public static Specification<Cliente> nomeContem(String nome) {
+    public static Specification<Usuario> nomeContem(String nome) {
         if (nome == null || nome.isBlank()) {
             return Specification.unrestricted();
         }
@@ -21,7 +21,7 @@ public class ClienteSpecification {
             );
     }
 
-    public static Specification<Cliente> emailContem(String email) {
+    public static Specification<Usuario> emailContem(String email) {
         if (email == null || email.isBlank()) {
             return Specification.unrestricted();
         }
@@ -33,7 +33,7 @@ public class ClienteSpecification {
             );
     }
 
-    public static Specification<Cliente> comFiltro(ClienteFiltro filtro) {
+    public static Specification<Usuario> comFiltro(UsuarioFiltro filtro) {
         return Specification.allOf(
             nomeContem(filtro.nome()),
             emailContem(filtro.email())
