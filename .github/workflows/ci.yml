@@ -56,6 +56,8 @@ jobs:
             -c "CREATE DATABASE supermarket_test;"
 
       - name: Executar testes e gerar cobertura
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: ./mvnw clean verify
 
       - name: Verificar relatório JaCoCo
