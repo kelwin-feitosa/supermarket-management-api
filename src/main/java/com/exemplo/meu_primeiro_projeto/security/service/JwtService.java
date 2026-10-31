@@ -1,5 +1,10 @@
 package com.exemplo.meu_primeiro_projeto.security.service;
 
+import com.exemplo.meu_primeiro_projeto.config.JwtProperties;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
@@ -9,11 +14,6 @@ import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import com.exemplo.meu_primeiro_projeto.config.JwtProperties;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 @Service 
 public class JwtService {

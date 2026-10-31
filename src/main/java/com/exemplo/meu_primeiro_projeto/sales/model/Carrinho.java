@@ -1,0 +1,56 @@
+package com.exemplo.meu_primeiro_projeto.sales.model;
+
+import com.exemplo.meu_primeiro_projeto.identity.model.Usuario;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class Carrinho {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "usuario_id", unique = true)
+    private Usuario usuario;
+
+    @OneToMany(
+    mappedBy = "carrinho",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+    )
+    private List<ItemCarrinho> itens = new ArrayList<>(); //Inicializar Vazia
+
+    protected Carrinho() { }
+
+    public Carrinho(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public void adicionarItem(ItemCarrinho item) {
+        item.setCarrinho(this);
+        //como estamos na mesma classe, então o getItens não é necessário
+        this.itens.add(item);
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public List<ItemCarrinho> getItens() { return itens; }
+    public void setItens(List<ItemCarrinho> itens) { this.itens = itens; }
+
+}

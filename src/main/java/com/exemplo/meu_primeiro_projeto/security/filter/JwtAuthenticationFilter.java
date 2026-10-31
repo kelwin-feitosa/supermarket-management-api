@@ -1,6 +1,15 @@
 package com.exemplo.meu_primeiro_projeto.security.filter;
 
+import com.exemplo.meu_primeiro_projeto.identity.security.service.UsuarioDetailsService;
+
+import com.exemplo.meu_primeiro_projeto.security.service.JwtService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,15 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.exemplo.meu_primeiro_projeto.security.service.JwtService;
-import com.exemplo.meu_primeiro_projeto.security.service.UsuarioDetailsService;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @Component 
 @RequiredArgsConstructor 

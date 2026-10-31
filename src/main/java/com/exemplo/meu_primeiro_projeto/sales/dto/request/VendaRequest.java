@@ -1,0 +1,17 @@
+package com.exemplo.meu_primeiro_projeto.sales.dto.request;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+
+@Schema(description = "Dados necessários para realizar uma venda.")
+public record VendaRequest(
+
+    @Schema(
+        description = "Identificador do usuario responsável pela venda.",
+        example = "1"
+    )
+    @NotNull(message = "O usuario é obrigatório.")
+    Long usuarioId
+
+) {
+}

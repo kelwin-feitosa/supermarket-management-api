@@ -1,0 +1,180 @@
+package com.exemplo.meu_primeiro_projeto.catalog.controller;
+
+import com.exemplo.meu_primeiro_projeto.catalog.dto.filter.CategoriaFiltro;
+import com.exemplo.meu_primeiro_projeto.catalog.dto.request.CategoriaRequest;
+import com.exemplo.meu_primeiro_projeto.catalog.dto.response.CategoriaResponse;
+import com.exemplo.meu_primeiro_projeto.catalog.service.CategoriaService;
+
+import com.exemplo.meu_primeiro_projeto.shared.exception.RespostaErro;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/categorias")
+@Tag(
+    name = "Categoria",
+    description = "Operações relacionadas ao gerenciamento de categorias."
+)
+public class CategoriaController {
+
+    private final CategoriaService service;
+
+    @Operation(
+        summary = "Listar categorias",
+        description = "Lista as categorias cadastradas no sistema, permitindo filtragem e paginação."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Categorias listadas com sucesso"
+    )
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
+    @GetMapping
+    public ResponseEntity<Page<CategoriaResponse>> listarCategorias(
+            CategoriaFiltro filtro,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+
+        return ResponseEntity.ok(service.listarCategorias(filtro, pageable));
+    }
+
+    @Operation(
+        summary = "Buscar categoria por ID",
+        description = "Busca uma categoria pelo identificador informado."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Categoria encontrada"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Categoria não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'CASHIER')")
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoriaResponse> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
+    }
+
+    @Operation(
+        summary = "Cadastrar categoria",
+        description = "Cadastra uma nova categoria no sistema."
+    )
+    @ApiResponse(
+        responseCode = "201",
+        description = "Categoria criada com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados enviados inválidos",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Categoria já cadastrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
+    @PostMapping
+    public ResponseEntity<CategoriaResponse> criarCategoria(
+            @Valid @RequestBody CategoriaRequest categoriaNova) {
+
+        CategoriaResponse resposta = service.criarCategoria(categoriaNova);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
+    }
+
+    @Operation(
+        summary = "Atualizar categoria",
+        description = "Atualiza os dados de uma categoria existente."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Categoria atualizada com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Dados enviados inválidos",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Categoria não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Categoria já cadastrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @PreAuthorize("hasRole('STOCK_MANAGER')")
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoriaResponse> atualizarCategoria(
+            @PathVariable Long id,
+            @Valid @RequestBody CategoriaRequest categoriaAtualizada) {
+
+        return ResponseEntity.ok(service.atualizarCategoria(id, categoriaAtualizada));
+    }
+
+    @Operation(
+        summary = "Excluir categoria",
+        description = "Remove uma categoria existente pelo identificador informado."
+    )
+    @ApiResponse(
+        responseCode = "204",
+        description = "Categoria removida com sucesso"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Categoria não encontrada",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = RespostaErro.class)
+        )
+    )
+    @PreAuthorize("hasRole('MANAGER')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
+        service.deletarCategoria(id);
+
+        return ResponseEntity.noContent().build();
+    }
+}
