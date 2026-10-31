@@ -1,0 +1,68 @@
+package com.exemplo.meu_primeiro_projeto.procurement.model;
+
+import com.exemplo.meu_primeiro_projeto.shared.util.DataHoraUtil;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class Compra {  //Representando as compras feitas com o fornecedor
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    private Fornecedor fornecedor;
+
+    @OneToMany(
+    mappedBy = "compra",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+    )
+    private List<ItemCompra> itens = new ArrayList<>();
+
+    private OffsetDateTime dataCompra;
+    private BigDecimal valorTotal;
+
+    protected Compra() {}
+
+    public Compra(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        dataCompra = DataHoraUtil.agora();
+    }
+
+    public void adicionarItem(ItemCompra item) {
+        item.setCompra(this);
+        this.itens.add(item);
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Fornecedor getFornecedor() { return fornecedor; }
+    public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
+
+    public List<ItemCompra> getItens() { return itens; }
+
+    public OffsetDateTime getDataCompra() { return dataCompra; }
+
+    public BigDecimal getValorTotal() { return valorTotal; }
+    public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
+
+}
