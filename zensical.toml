@@ -5,10 +5,9 @@ site_description = "Documentação técnica de um backend Java/Spring Boot — a
 site_author = "Kelwin Ribeiro Feitosa"
 repo_url = "https://github.com/kelwin-feitosa/supermarket-management-api"
 repo_name = "kelwin-feitosa/supermarket-management-api"
-edit_uri = "edit/main/docs/"
 docs_dir = "docs"
 site_dir = "site"
-extra_css = ["stylesheets/extra.css", "stylesheets/advanced.css"]
+extra_css = ["stylesheets/advanced.css"]
 extra_javascript = ["javascripts/portal.js"]
 nav = [
   { "Início" = "index.md" },
@@ -52,7 +51,6 @@ features = [
   "navigation.footer",
   "navigation.tracking",
   "content.code.copy",
-  "content.action.edit",
   "search.highlight",
   "toc.follow"
 ]

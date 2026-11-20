@@ -160,23 +160,23 @@ O pipeline possui etapas para:
 - Validar o relatório de cobertura;
 - Executar análise estática quando configurada para o evento correspondente.
 
-### Estado atual
+### Estado verificado do CI
 
-A branch principal teve uma execução de CI bem-sucedida antes da refatoração.
+Em **20 de novembro de 2026**, após a integração do PR #19 na `main`, os workflows de [CI do backend](https://github.com/kelwin-feitosa/supermarket-management-api/actions/runs/44714491596) e [publicação da documentação](https://github.com/kelwin-feitosa/supermarket-management-api/actions/runs/44714491633) concluíram com sucesso.
 
-Entretanto, algumas atualizações automáticas de dependências apresentaram falhas nos testes de integração.
+Essa informação é um **registro datado**, não um indicador em tempo real. Para verificar a execução mais recente, consulte a [página de Actions](https://github.com/kelwin-feitosa/supermarket-management-api/actions). O resultado não garante cobertura integral, ausência de vulnerabilidades ou execução bem-sucedida de todos os eventos futuros.
 
-Foi identificado um problema relacionado à disponibilidade da chave JWT nos ambientes de pull requests automatizados.
+#### Histórico e melhorias pendentes
 
-#### Melhorias pendentes
+No histórico do projeto, atualizações automáticas de dependências apresentaram falhas associadas à disponibilidade de `JWT_SECRET` em alguns pull requests. O êxito da `main` **não demonstra** que esses cenários tenham sido resolvidos, pois PRs de bots podem ter acesso diferente a segredos.
 
-- Configurar chave JWT específica para testes;
-- Reduzir dependência de segredos em PRs automatizados;
-- Garantir isolamento do banco de testes;
-- Validar o pipeline após a refatoração;
-- Revisar atualizações de dependências.
+- Criar uma chave JWT apropriada para testes, sem depender de segredos usados por ambientes reais;
+- Garantir que pull requests automatizados possam executar os testes com segurança;
+- Reforçar o isolamento e a reprodutibilidade do banco de testes;
+- Cobrir autorização, transações e concorrência;
+- Revisar atualizações de dependências antes de integrá-las.
 
-O sucesso da execução local não substitui a validação do CI.
+O êxito do CI deve continuar sendo um critério de revisão a cada alteração.
 
 ---
 
