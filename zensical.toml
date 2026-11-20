@@ -1,0 +1,36 @@
+[project]
+site_name = "Supermarket Management API"
+site_url = "https://kelwin-feitosa.github.io/supermarket-management-api/"
+site_description = "Documentação de arquitetura, domínio, APIs, persistência e qualidade do backend"
+site_author = "Kelwin Ribeiro Feitosa"
+docs_dir = "docs"
+site_dir = "site"
+nav = [
+  { "Início" = "index.md" },
+  { "Visão geral" = "visao-geral.md" },
+  { "Arquitetura" = "arquitetura.md" },
+  { "Regras de negócio" = "dominio.md" },
+  { "Banco de dados" = "banco-de-dados.md" },
+  { "Segurança" = "seguranca.md" },
+  { "API e erros" = "api.md" },
+  { "Mapa de rotas" = "rotas.md" },
+  { "Testes e CI" = "qualidade.md" },
+  { "Executar localmente" = "execucao.md" },
+  { "Roadmap" = "roadmap.md" },
+  { "Como contribuir" = "contribuindo.md" },
+  { "Decisões e histórico" = [
+      { "ADR-0001: monólito modular" = "decisoes/0001-monolito-modular.md" },
+      { "Registro da fase de refatoração" = "ARCHITECTURE.md" }
+    ]
+  }
+]
+
+[project.theme]
+variant = "modern"
+language = "pt-BR"
+features = ["navigation.instant", "navigation.top", "content.code.copy"]
+
+[project.markdown_extensions]
+pymdownx.superfences.custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
