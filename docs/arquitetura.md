@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 02 / ENGENHARIA <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Arquitetura
 
 O sistema é uma única aplicação Spring Boot organizada por funcionalidades, não uma coleção de microserviços. Veja também [ADR-0001](decisoes/0001-monolito-modular.md).

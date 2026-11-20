@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 07 / ROTAS <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Mapa de rotas do backend
 
 Resumo conferido nas anotações dos controllers da árvore `main` consultada em 20/11/2026. **Não substitui o OpenAPI executável nem testes de autorização**. As restrições listadas são as declaradas com `@PreAuthorize`, antes da aplicação completa de hierarquia e regras de segurança.

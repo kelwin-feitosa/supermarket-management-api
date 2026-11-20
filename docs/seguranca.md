@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 05 / SEGURANÇA <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Autenticação e autorização
 
 **Importante:** a existência dos perfis não comprova que todos os endpoints possuem as permissões corretas. Compare [o mapa de rotas](rotas.md) com testes de autorização antes de qualquer uso real.

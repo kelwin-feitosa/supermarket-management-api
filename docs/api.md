@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 06 / CONTRATOS <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # API, Swagger e erros
 
 O contrato OpenAPI é gerado pela aplicação em execução. Para verbos e caminhos observados no código, veja o [mapa de rotas](rotas.md).

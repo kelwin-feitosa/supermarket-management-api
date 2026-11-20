@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 03 / REGRAS DE NEGÓCIO <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Regras de negócio
 
 As operações de compra e venda são transacionais, mas isso **não garante por si só** integridade diante de vendas concorrentes. Confira o fluxo e as limitações abaixo.

@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 09 / EXECUÇÃO <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Executar o ambiente
 
 O banco PostgreSQL é disponibilizado pelo `docker-compose.yml` na porta local `5433`. Use apenas credenciais de desenvolvimento ao reproduzir o exemplo.
