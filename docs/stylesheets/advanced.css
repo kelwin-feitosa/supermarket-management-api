@@ -577,3 +577,31 @@ body, button, input { font-family: var(--studio-type); }
     gap: .35rem;
   }
 }
+
+
+/* 15 — Header and tabs contrast.
+   The legacy CSS used to set these foreground colors; the unified theme
+   must provide them explicitly so the dark chrome remains legible. */
+.md-header,
+.md-header__title,
+.md-header__title .md-ellipsis,
+.md-header__button.md-icon,
+.md-header__source .md-source,
+.md-header__source .md-source__repository,
+.md-header__source .md-source__facts,
+.md-header__source .md-source__icon {
+  color: #f1f9fc;
+}
+.md-header__button.md-icon:hover,
+.md-header__source .md-source:hover {
+  color: #8efbe4;
+}
+.md-tabs,
+.md-tabs__link {
+  color: #dcebf2;
+}
+.md-tabs__item--active .md-tabs__link,
+.md-tabs__link:hover {
+  color: #8cf7dc;
+  opacity: 1;
+}
