@@ -35,6 +35,16 @@ jobs:
         run: python -m pip install -r requirements-docs.txt
       - name: Validar site estático
         run: zensical build --clean
+      - name: Verificar JavaScript
+        run: node --check docs/javascripts/portal.js
+      - name: Verificar arquivos e conteúdo da página
+        run: |
+          test -s site/index.html
+          test -s site/stylesheets/advanced.css
+          test -s site/javascripts/portal.js
+          test -s site/assets/brand.svg
+          grep -q 'studio-module-button' site/index.html
+          grep -q 'studio-topic-card' site/index.html
 
   publish:
     name: Publicar GitHub Pages
