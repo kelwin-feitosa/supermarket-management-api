@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 04 / PERSISTÊNCIA <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Persistência e banco de dados
 
 O esquema é versionado por Flyway em `src/main/resources/db/migration/`. O modelo descrito abaixo segue o backend em evolução.

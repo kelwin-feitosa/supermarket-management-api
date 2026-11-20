@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 01 / VISÃO GERAL <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Visão geral
 
 Entenda o objetivo funcional, as capacidades existentes e os limites do escopo.

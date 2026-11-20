@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 08 / QUALIDADE <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Testes e integração contínua
 
 O pipeline existente de backend permanece separado do pipeline de documentação. Resultados e números históricos devem ser confirmados nas execuções recentes do CI.

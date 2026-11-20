@@ -1,3 +1,5 @@
+<div class="studio-doc-eyebrow"><span class="studio-doc-eyebrow__mark" aria-hidden="true"></span> 10 / EVOLUÇÃO <span class="studio-doc-eyebrow__suffix">/ SUPERMARKET MANAGEMENT API</span></div>
+
 # Roadmap e limitações
 
 Itens deste documento são **planejados**, salvo marcação expressa de implementação. A priorização deve acompanhar necessidades demonstradas, testes e capacidade de manutenção.

@@ -8,7 +8,8 @@ repo_name = "kelwin-feitosa/supermarket-management-api"
 edit_uri = "edit/main/docs/"
 docs_dir = "docs"
 site_dir = "site"
-extra_css = ["stylesheets/extra.css"]
+extra_css = ["stylesheets/extra.css", "stylesheets/advanced.css"]
+extra_javascript = ["javascripts/portal.js"]
 nav = [
   { "Início" = "index.md" },
   { "Comece aqui" = [
@@ -38,6 +39,8 @@ nav = [
 
 [project.theme]
 variant = "modern"
+logo = "assets/brand.svg"
+favicon = "assets/brand.svg"
 language = "pt-BR"
 font = false
 features = [
@@ -53,9 +56,6 @@ features = [
   "search.highlight",
   "toc.follow"
 ]
-
-[project.theme.icon]
-logo = "lucide/boxes"
 
 [[project.theme.palette]]
 scheme = "default"
