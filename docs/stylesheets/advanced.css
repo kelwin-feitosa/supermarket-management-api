@@ -479,3 +479,101 @@ body, button, input { font-family: var(--studio-type); }
   .studio-home .studio-hero__highlight { color:CanvasText; background:none; }
   .studio-home .studio-topic-card__icon, .studio-home .studio-module-details { forced-color-adjust:auto; }
 }
+
+
+/* 14 — Mobile polish: typography centered where it is promotional,
+   while technical articles and navigation remain left-aligned. */
+@media (max-width: 45em) {
+  /* Remove the floating 'back to top' pill obstructing CTA buttons. */
+  .md-top { display: none !important; }
+
+  .studio-home .studio-hero__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .studio-home .studio-hero__eyebrow,
+  .studio-home .studio-hero__edition,
+  .studio-home .studio-hero__footnote {
+    justify-content: center;
+    text-align: center;
+  }
+  .studio-home .studio-hero h1 {
+    width: 100%;
+    max-width: 22rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-wrap: balance;
+  }
+  .studio-home .studio-hero__description {
+    max-width: 27rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-wrap: pretty;
+  }
+  .studio-home .studio-hero__actions {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    max-width: 24rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .studio-home .studio-hero__actions .studio-button {
+    width: 100%;
+  }
+  .studio-home .studio-hero__art {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .studio-home .studio-fact {
+    justify-content: center;
+    text-align: center;
+  }
+  .studio-home .studio-fact__text { align-items: center; }
+  .studio-home .studio-section__heading,
+  .studio-home .studio-explorer__heading {
+    text-align: center;
+  }
+  .studio-home .studio-section__heading p,
+  .studio-home .studio-explorer__heading p {
+    max-width: 26rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-wrap: pretty;
+  }
+  .studio-home .studio-topic-card {
+    text-align: left;
+  }
+  .studio-home .studio-cta__copy {
+    text-align: center;
+  }
+  .studio-home .studio-cta p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .studio-home .studio-cta__buttons {
+    justify-content: center;
+  }
+  .studio-home .studio-cta__buttons .studio-button {
+    max-width: 24rem;
+    width: 100%;
+  }
+  .studio-home .studio-home-disclaimer {
+    margin-top: 1.7rem;
+    align-items: start;
+  }
+}
+@media (max-width: 25em) {
+  .studio-home .studio-hero__eyebrow {
+    font-size: .49rem;
+    letter-spacing: .07em;
+    gap: .4rem;
+  }
+  .studio-home .studio-hero__edition {
+    font-size: .5rem;
+    gap: .35rem;
+  }
+}
