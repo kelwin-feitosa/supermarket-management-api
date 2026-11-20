@@ -1,36 +1,81 @@
 [project]
 site_name = "Supermarket Management API"
 site_url = "https://kelwin-feitosa.github.io/supermarket-management-api/"
-site_description = "Documentação de arquitetura, domínio, APIs, persistência e qualidade do backend"
+site_description = "Documentação técnica de um backend Java/Spring Boot — arquitetura, domínio, APIs e qualidade"
 site_author = "Kelwin Ribeiro Feitosa"
+repo_url = "https://github.com/kelwin-feitosa/supermarket-management-api"
+repo_name = "kelwin-feitosa/supermarket-management-api"
+edit_uri = "edit/main/docs/"
 docs_dir = "docs"
 site_dir = "site"
+extra_css = ["stylesheets/extra.css"]
 nav = [
   { "Início" = "index.md" },
-  { "Visão geral" = "visao-geral.md" },
-  { "Arquitetura" = "arquitetura.md" },
-  { "Regras de negócio" = "dominio.md" },
-  { "Banco de dados" = "banco-de-dados.md" },
-  { "Segurança" = "seguranca.md" },
-  { "API e erros" = "api.md" },
-  { "Mapa de rotas" = "rotas.md" },
-  { "Testes e CI" = "qualidade.md" },
-  { "Executar localmente" = "execucao.md" },
-  { "Roadmap" = "roadmap.md" },
-  { "Como contribuir" = "contribuindo.md" },
-  { "Decisões e histórico" = [
+  { "Comece aqui" = [
+    { "Visão geral" = "visao-geral.md" },
+    { "Executar localmente" = "execucao.md" }
+  ] },
+  { "Engenharia" = [
+    { "Arquitetura" = "arquitetura.md" },
+    { "Regras de negócio" = "dominio.md" },
+    { "Banco de dados" = "banco-de-dados.md" },
+    { "Segurança" = "seguranca.md" }
+  ] },
+  { "Referência" = [
+    { "API e erros" = "api.md" },
+    { "Mapa de rotas" = "rotas.md" },
+    { "Testes e CI" = "qualidade.md" }
+  ] },
+  { "Projeto" = [
+    { "Roadmap" = "roadmap.md" },
+    { "Como contribuir" = "contribuindo.md" },
+    { "Decisões e histórico" = [
       { "ADR-0001: monólito modular" = "decisoes/0001-monolito-modular.md" },
       { "Registro da fase de refatoração" = "ARCHITECTURE.md" }
-    ]
-  }
+    ] }
+  ] }
 ]
 
 [project.theme]
 variant = "modern"
 language = "pt-BR"
-features = ["navigation.instant", "navigation.top", "content.code.copy"]
+font = false
+features = [
+  "navigation.tabs",
+  "navigation.tabs.sticky",
+  "navigation.sections",
+  "navigation.path",
+  "navigation.top",
+  "navigation.footer",
+  "navigation.tracking",
+  "content.code.copy",
+  "content.action.edit",
+  "search.highlight",
+  "toc.follow"
+]
+
+[project.theme.icon]
+logo = "lucide/boxes"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/moon"
+toggle.name = "Alternar para modo escuro"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/sun"
+toggle.name = "Alternar para modo claro"
 
 [project.markdown_extensions]
+attr_list = {}
+md_in_html = {}
+admonition = {}
+pymdownx.details = {}
 pymdownx.superfences.custom_fences = [
   { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
 ]
